@@ -2,7 +2,7 @@
 <html lang="ru" ng-app="verbTensesTableApp">
     <head>
         <title>VTT - Verb Tenses Table</title>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
         <style>
             table {
@@ -19,218 +19,218 @@
 
             verbTensesTableApp.controller('MainController', function MainController($scope) {
                 var irregularVerbs = {
-                        //"abide": {  baseFrom: "Abide", pastSimple: "Abode/Abided", pastParticiple: "Abode/Abided/Abidden" },
-                        //"alight": {  baseFrom: "Alight", pastSimple: "Alit/Alighted", pastParticiple: "Alit/Alighted" },
+                        //"abide": {  baseFrom: "abide", pastSimple: "abode/Abided", pastParticiple: "abode/Abided/Abidden" },
+                        //"alight": {  baseFrom: "alight", pastSimple: "alit/Alighted", pastParticiple: "alit/Alighted" },
                         "arise": {  baseFrom: "arise", pastSimple: "arose", pastParticiple: "arisen" },
-                        "awake": {  baseFrom: "Awake", pastSimple: "Awoke", pastParticiple: "Awoken" },
-                        "be": {  baseFrom: "Be", pastSimple: "Was/Were", pastParticiple: "Been" },
-                        "bear": {  baseFrom: "Bear", pastSimple: "Bore", pastParticiple: "Born/Borne" },
-                        "beat": {  baseFrom: "Beat", pastSimple: "Beat", pastParticiple: "Beaten" },
-                        "become": {  baseFrom: "Become", pastSimple: "Became", pastParticiple: "Become" },
-                        "begin": {  baseFrom: "Begin", pastSimple: "Began", pastParticiple: "Begun" },
-                        "behold": {  baseFrom: "Behold", pastSimple: "Beheld", pastParticiple: "Beheld" },
-                        "bend": {  baseFrom: "Bend", pastSimple: "Bent", pastParticiple: "Bent" },
-                        "bet": {  baseFrom: "Bet", pastSimple: "Bet", pastParticiple: "Bet" },
-                        "bid": {  baseFrom: "Bid", pastSimple: "Bade", pastParticiple: "Bidden" },
-                        "bid": {  baseFrom: "Bid", pastSimple: "Bid", pastParticiple: "Bid" },
-                        "bind": {  baseFrom: "Bind", pastSimple: "Bound", pastParticiple: "Bound" },
-                        "bite": {  baseFrom: "Bite", pastSimple: "Bit", pastParticiple: "Bitten" },
-                        "bleed": {  baseFrom: "Bleed", pastSimple: "Bled", pastParticiple: "Bled" },
-                        "blow": {  baseFrom: "Blow", pastSimple: "Blew", pastParticiple: "Blown" },
-                        "break": {  baseFrom: "Break", pastSimple: "Broke", pastParticiple: "Broken" },
-                        "breed": {  baseFrom: "Breed", pastSimple: "Bred", pastParticiple: "Bred" },
-                        "bring": {  baseFrom: "Bring", pastSimple: "Brought", pastParticiple: "Brought" },
-                        "broadcast": {  baseFrom: "Broadcast", pastSimple: "Broadcast/Broadcasted", pastParticiple: "Broadcast/Broadcasted" },
-                        "build": {  baseFrom: "Build", pastSimple: "Built", pastParticiple: "Built" },
-                        "burn": {  baseFrom: "Burn", pastSimple: "Burnt/Burned", pastParticiple: "Burnt/Burned" },
-                        "burst": {  baseFrom: "Burst", pastSimple: "Burst", pastParticiple: "Burst" },
-                        "bust": {  baseFrom: "Bust", pastSimple: "Bust", pastParticiple: "Bust" },
-                        "buy": {  baseFrom: "Buy", pastSimple: "Bought", pastParticiple: "Bought" },
-                        "cast": {  baseFrom: "Cast", pastSimple: "Cast", pastParticiple: "Cast" },
-                        "catch": {  baseFrom: "Catch", pastSimple: "Caught", pastParticiple: "Caught" },
-                        "choose": {  baseFrom: "Choose", pastSimple: "Chose", pastParticiple: "Chosen" },
-                        "clap": {  baseFrom: "Clap", pastSimple: "Clapped/Clapt", pastParticiple: "Clapped/Clapt" },
-                        "cling": {  baseFrom: "Cling", pastSimple: "Clung", pastParticiple: "Clung" },
-                        "clothe": {  baseFrom: "Clothe", pastSimple: "Clad/Clothed", pastParticiple: "Clad/Clothed" },
-                        "come": {  baseFrom: "Come", pastSimple: "Came", pastParticiple: "Come" },
-                        "cost": {  baseFrom: "Cost", pastSimple: "Cost", pastParticiple: "Cost" },
-                        "creep": {  baseFrom: "Creep", pastSimple: "Crept", pastParticiple: "Crept" },
-                        "cut": {  baseFrom: "Cut", pastSimple: "Cut", pastParticiple: "Cut" },
-                        "dare": {  baseFrom: "Dare", pastSimple: "Dared/Durst", pastParticiple: "Dared" },
-                        "deal": {  baseFrom: "Deal", pastSimple: "Dealt", pastParticiple: "Dealt" },
-                        "dig": {  baseFrom: "Dig", pastSimple: "Dug", pastParticiple: "Dug" },
-                        "dive": {  baseFrom: "Dive", pastSimple: "Dived/Dove", pastParticiple: "Dived" },
-                        "do": {  baseFrom: "Do", pastSimple: "Did", pastParticiple: "Done" },
-                        "draw": {  baseFrom: "Draw", pastSimple: "Drew", pastParticiple: "Drawn" },
-                        "dream": {  baseFrom: "Dream", pastSimple: "Dreamt/Dreamed", pastParticiple: "Dreamt/Dreamed" },
-                        "drink": {  baseFrom: "Drink", pastSimple: "Drank", pastParticiple: "Drunk" },
-                        "drive": {  baseFrom: "Drive", pastSimple: "Drove", pastParticiple: "Driven" },
-                        "dwell": {  baseFrom: "Dwell", pastSimple: "Dwelt", pastParticiple: "Dwelt" },
-                        "eat": {  baseFrom: "Eat", pastSimple: "Ate", pastParticiple: "Eaten" },
-                        "fall": {  baseFrom: "Fall", pastSimple: "Fell", pastParticiple: "Fallen" },
-                        "feed": {  baseFrom: "Feed", pastSimple: "Fed", pastParticiple: "Fed" },
-                        "feel": {  baseFrom: "Feel", pastSimple: "Felt", pastParticiple: "Felt" },
-                        "fight": {  baseFrom: "Fight", pastSimple: "Fought", pastParticiple: "Fought" },
-                        "find": {  baseFrom: "Find", pastSimple: "Found", pastParticiple: "Found" },
-                        "fit": {  baseFrom: "Fit", pastSimple: "Fit/Fitted", pastParticiple: "Fit/Fitted" },
-                        "flee": {  baseFrom: "Flee", pastSimple: "Fled", pastParticiple: "Fled" },
-                        "fling": {  baseFrom: "Fling", pastSimple: "Flung", pastParticiple: "Flung" },
-                        "fly": {  baseFrom: "Fly", pastSimple: "Flew", pastParticiple: "Flown" },
-                        "forbid": {  baseFrom: "Forbid", pastSimple: "Forbade/Forbad", pastParticiple: "Forbidden" },
-                        "forecast": {  baseFrom: "Forecast", pastSimple: "Forecast/Forecasted", pastParticiple: "Forecast/Forecasted" },
-                        "foresee": {  baseFrom: "Foresee", pastSimple: "Foresaw", pastParticiple: "Foreseen" },
-                        "foretell": {  baseFrom: "Foretell", pastSimple: "Foretold", pastParticiple: "Foretold" },
-                        "forget": {  baseFrom: "Forget", pastSimple: "Forgot", pastParticiple: "Forgotten" },
-                        "forgive": {  baseFrom: "Forgive", pastSimple: "Forgave", pastParticiple: "Forgiven" },
-                        "forsake": {  baseFrom: "Forsake", pastSimple: "Forsook", pastParticiple: "Forsaken" },
-                        "freeze": {  baseFrom: "Freeze", pastSimple: "Froze", pastParticiple: "Frozen" },
-                        "frostbite": {  baseFrom: "Frostbite", pastSimple: "Frostbit", pastParticiple: "Frostbitten" },
-                        "get": {  baseFrom: "Get", pastSimple: "Got", pastParticiple: "Got/Gotten" },
-                        "give": {  baseFrom: "Give", pastSimple: "Gave", pastParticiple: "Given" },
-                        "go": {  baseFrom: "Go", pastSimple: "Went", pastParticiple: "Gone/Been" },
-                        "grind": {  baseFrom: "Grind", pastSimple: "Ground", pastParticiple: "Ground" },
-                        "grow": {  baseFrom: "Grow", pastSimple: "Grew", pastParticiple: "Grown" },
-                        "handwrite": {  baseFrom: "Handwrite", pastSimple: "Handwrote", pastParticiple: "Handwritten" },
-                        "hang": {  baseFrom: "Hang", pastSimple: "Hung/Hanged", pastParticiple: "Hung/Hanged" },
-                        "have": {  baseFrom: "Have", pastSimple: "Had", pastParticiple: "Had" },
-                        "hear": {  baseFrom: "Hear", pastSimple: "Heard", pastParticiple: "Heard" },
-                        "hide": {  baseFrom: "Hide", pastSimple: "Hid", pastParticiple: "Hidden" },
-                        "hit": {  baseFrom: "Hit", pastSimple: "Hit", pastParticiple: "Hit" },
-                        "hold": {  baseFrom: "Hold", pastSimple: "Held", pastParticiple: "Held" },
-                        "hurt": {  baseFrom: "Hurt", pastSimple: "Hurt", pastParticiple: "Hurt" },
-                        "inlay": {  baseFrom: "Inlay", pastSimple: "Inlaid", pastParticiple: "Inlaid" },
-                        "input": {  baseFrom: "Input", pastSimple: "Input/Inputted", pastParticiple: "Input/Inputted" },
-                        "interlay": {  baseFrom: "Interlay", pastSimple: "Interlaid", pastParticiple: "Interlaid" },
-                        "keep": {  baseFrom: "Keep", pastSimple: "Kept", pastParticiple: "Kept" },
-                        "kneel": {  baseFrom: "Kneel", pastSimple: "Knelt/Kneeled", pastParticiple: "Knelt/Kneeled" },
-                        "knit": {  baseFrom: "Knit", pastSimple: "Knit/Knitted", pastParticiple: "Knit/Knitted" },
-                        "know": {  baseFrom: "Know", pastSimple: "Knew", pastParticiple: "Known" },
-                        "lay": {  baseFrom: "Lay", pastSimple: "Laid", pastParticiple: "Laid" },
-                        "lead": {  baseFrom: "Lead", pastSimple: "Led", pastParticiple: "Led" },
-                        "lean": {  baseFrom: "Lean", pastSimple: "Leant/Leaned", pastParticiple: "Leant/Leaned" },
-                        "leap": {  baseFrom: "Leap", pastSimple: "Leapt/Leaped", pastParticiple: "Leapt/Leaped" },
-                        "learn": {  baseFrom: "Learn", pastSimple: "Learnt/Learned", pastParticiple: "Learnt/Learned" },
-                        "leave": {  baseFrom: "Leave", pastSimple: "Left", pastParticiple: "Left" },
-                        "lend": {  baseFrom: "Lend", pastSimple: "Lent", pastParticiple: "Lent" },
-                        "let": {  baseFrom: "Let", pastSimple: "Let", pastParticiple: "Let" },
-                        "lie": {  baseFrom: "Lie", pastSimple: "Lay", pastParticiple: "Lain" },
-                        "light": {  baseFrom: "Light", pastSimple: "Lit", pastParticiple: "Lit" },
-                        "lose": {  baseFrom: "Lose", pastSimple: "Lost", pastParticiple: "Lost" },
-                        "make": {  baseFrom: "Make", pastSimple: "Made", pastParticiple: "Made" },
-                        "mean": {  baseFrom: "Mean", pastSimple: "Meant", pastParticiple: "Meant" },
-                        "meet": {  baseFrom: "Meet", pastSimple: "Met", pastParticiple: "Met" },
-                        "melt": {  baseFrom: "Melt", pastSimple: "Melted", pastParticiple: "Molten/Melted" },
-                        "mislead": {  baseFrom: "Mislead", pastSimple: "Misled", pastParticiple: "Misled" },
-                        "mistake": {  baseFrom: "Mistake", pastSimple: "Mistook", pastParticiple: "Mistaken" },
-                        "misunderstand": {  baseFrom: "Misunderstand", pastSimple: "Misunderstood", pastParticiple: "Misunderstood" },
-                        "miswed": {  baseFrom: "Miswed", pastSimple: "Miswed/Miswedded", pastParticiple: "Miswed/Miswedded" },
-                        "mow": {  baseFrom: "Mow", pastSimple: "Mowed", pastParticiple: "Mown" },
-                        "overdraw": {  baseFrom: "Overdraw", pastSimple: "Overdrew", pastParticiple: "Overdrawn" },
-                        "overhear": {  baseFrom: "Overhear", pastSimple: "Overheard", pastParticiple: "Overheard" },
-                        "overtake": {  baseFrom: "Overtake", pastSimple: "Overtook", pastParticiple: "Overtaken" },
-                        "pay": {  baseFrom: "Pay", pastSimple: "Paid", pastParticiple: "Paid" },
-                        "preset": {  baseFrom: "Preset", pastSimple: "Preset", pastParticiple: "Preset" },
-                        "prove": {  baseFrom: "Prove", pastSimple: "Proved", pastParticiple: "Proven/Proved" },
-                        "put": {  baseFrom: "Put", pastSimple: "Put", pastParticiple: "Put" },
-                        "quit": {  baseFrom: "Quit", pastSimple: "Quit", pastParticiple: "Quit" },
-                        "re-prove": {  baseFrom: "Re-prove", pastSimple: "Re-proved", pastParticiple: "Re-proven/Re-proved" },
-                        "read": {  baseFrom: "Read", pastSimple: "Read", pastParticiple: "Read" },
-                        "rid": {  baseFrom: "Rid", pastSimple: "Rid/Ridded", pastParticiple: "Rid/Ridded" },
-                        "ride": {  baseFrom: "Ride", pastSimple: "Rode", pastParticiple: "Ridden" },
-                        "ring": {  baseFrom: "Ring", pastSimple: "Rang", pastParticiple: "Rung" },
-                        "rise": {  baseFrom: "Rise", pastSimple: "Rose", pastParticiple: "Risen" },
-                        "rive": {  baseFrom: "Rive", pastSimple: "Rived", pastParticiple: "Riven/Rived" },
-                        "run": {  baseFrom: "Run", pastSimple: "Ran", pastParticiple: "Run" },
-                        "saw": {  baseFrom: "Saw", pastSimple: "Sawed", pastParticiple: "Sawn/Sawed" },
-                        "say": {  baseFrom: "Say", pastSimple: "Said", pastParticiple: "Said" },
-                        "see": {  baseFrom: "See", pastSimple: "Saw", pastParticiple: "Seen" },
-                        "seek": {  baseFrom: "Seek", pastSimple: "Sought", pastParticiple: "Sought" },
-                        "sell": {  baseFrom: "Sell", pastSimple: "Sold", pastParticiple: "Sold" },
-                        "send": {  baseFrom: "Send", pastSimple: "Sent", pastParticiple: "Sent" },
-                        "set": {  baseFrom: "Set", pastSimple: "Set", pastParticiple: "Set" },
-                        "sew": {  baseFrom: "Sew", pastSimple: "Sewed", pastParticiple: "Sewn/Sewed" },
-                        "shake": {  baseFrom: "Shake", pastSimple: "Shook", pastParticiple: "Shaken" },
-                        "shave": {  baseFrom: "Shave", pastSimple: "Shaved", pastParticiple: "Shaven/Shaved" },
-                        "shear": {  baseFrom: "Shear", pastSimple: "Shore/Sheared", pastParticiple: "Shorn/Sheared" },
-                        "shed": {  baseFrom: "Shed", pastSimple: "Shed", pastParticiple: "Shed" },
-                        "shine": {  baseFrom: "Shine", pastSimple: "Shone", pastParticiple: "Shone" },
-                        "shoe": {  baseFrom: "Shoe", pastSimple: "Shod", pastParticiple: "Shod" },
-                        "shoot": {  baseFrom: "Shoot", pastSimple: "Shot", pastParticiple: "Shot" },
-                        "show": {  baseFrom: "Show", pastSimple: "Showed", pastParticiple: "Shown" },
-                        "shrink": {  baseFrom: "Shrink", pastSimple: "Shrank", pastParticiple: "Shrunk" },
-                        "shut": {  baseFrom: "Shut", pastSimple: "Shut", pastParticiple: "Shut" },
-                        "sing": {  baseFrom: "Sing", pastSimple: "Sang", pastParticiple: "Sung" },
-                        "sink": {  baseFrom: "Sink", pastSimple: "Sank", pastParticiple: "Sunk" },
-                        "sit": {  baseFrom: "Sit", pastSimple: "Sat", pastParticiple: "Sat" },
-                        "slay": {  baseFrom: "Slay", pastSimple: "Slew", pastParticiple: "Slain" },
-                        "sleep": {  baseFrom: "Sleep", pastSimple: "Slept", pastParticiple: "Slept" },
-                        "slide": {  baseFrom: "Slide", pastSimple: "Slid", pastParticiple: "Slid/Slidden" },
-                        "sling": {  baseFrom: "Sling", pastSimple: "Slung", pastParticiple: "Slung" },
-                        "slink": {  baseFrom: "Slink", pastSimple: "Slunk", pastParticiple: "Slunk" },
-                        "slit": {  baseFrom: "Slit", pastSimple: "Slit", pastParticiple: "Slit" },
-                        "smell": {  baseFrom: "Smell", pastSimple: "Smelt/Smelled", pastParticiple: "Smelt/Smelled" },
-                        "sneak": {  baseFrom: "Sneak", pastSimple: "Sneaked/Snuck", pastParticiple: "Sneaked/Snuck" },
-                        "soothsay": {  baseFrom: "Soothsay", pastSimple: "Soothsaid", pastParticiple: "Soothsaid" },
-                        "sow": {  baseFrom: "Sow", pastSimple: "Sowed", pastParticiple: "Sown" },
-                        "speak": {  baseFrom: "Speak", pastSimple: "Spoke", pastParticiple: "Spoken" },
-                        "speed": {  baseFrom: "Speed", pastSimple: "Sped/Speeded", pastParticiple: "Sped/Speeded" },
-                        "spell": {  baseFrom: "Spell", pastSimple: "Spelt/Spelled", pastParticiple: "Spelt/Spelled" },
-                        "spend": {  baseFrom: "Spend", pastSimple: "Spent", pastParticiple: "Spent" },
-                        "spill": {  baseFrom: "Spill", pastSimple: "Spilt/Spilled", pastParticiple: "Spilt/Spilled" },
-                        "spin": {  baseFrom: "Spin", pastSimple: "Span/Spun", pastParticiple: "Spun" },
-                        "spit": {  baseFrom: "Spit", pastSimple: "Spat/Spit", pastParticiple: "Spat/Spit" },
-                        "split": {  baseFrom: "Split", pastSimple: "Split", pastParticiple: "Split" },
-                        "spoil": {  baseFrom: "Spoil", pastSimple: "Spoilt/Spoiled", pastParticiple: "Spoilt/Spoiled" },
-                        "spread": {  baseFrom: "Spread", pastSimple: "Spread", pastParticiple: "Spread" },
-                        "spring": {  baseFrom: "Spring", pastSimple: "Sprang", pastParticiple: "Sprung" },
-                        "stand": {  baseFrom: "Stand", pastSimple: "Stood", pastParticiple: "Stood" },
-                        "steal": {  baseFrom: "Steal", pastSimple: "Stole", pastParticiple: "Stolen" },
-                        "stick": {  baseFrom: "Stick", pastSimple: "Stuck", pastParticiple: "Stuck" },
-                        "sting": {  baseFrom: "Sting", pastSimple: "Stung", pastParticiple: "Stung" },
-                        "stink": {  baseFrom: "Stink", pastSimple: "Stank", pastParticiple: "Stunk" },
-                        "stride": {  baseFrom: "Stride", pastSimple: "Strode/Strided", pastParticiple: "Stridden" },
-                        "strike": {  baseFrom: "Strike", pastSimple: "Struck", pastParticiple: "Struck/Stricken" },
-                        "string": {  baseFrom: "String", pastSimple: "Strung", pastParticiple: "Strung" },
-                        "strip": {  baseFrom: "Strip", pastSimple: "Stript/Stripped", pastParticiple: "Stript/Stripped" },
-                        "strive": {  baseFrom: "Strive", pastSimple: "Strove", pastParticiple: "Striven" },
-                        "sublet": {  baseFrom: "Sublet", pastSimple: "Sublet", pastParticiple: "Sublet" },
-                        "sunburn": {  baseFrom: "Sunburn", pastSimple: "Sunburned/Sunburnt", pastParticiple: "Sunburned/Sunburnt" },
-                        "swear": {  baseFrom: "Swear", pastSimple: "Swore", pastParticiple: "Sworn" },
-                        "sweat": {  baseFrom: "Sweat", pastSimple: "Sweat/Sweated", pastParticiple: "Sweat/Sweated" },
-                        "sweep": {  baseFrom: "Sweep", pastSimple: "Swept/Sweeped", pastParticiple: "Swept/Sweeped" },
-                        "swell": {  baseFrom: "Swell", pastSimple: "Swelled", pastParticiple: "Swollen" },
-                        "swim": {  baseFrom: "Swim", pastSimple: "Swam", pastParticiple: "Swum" },
-                        "swing": {  baseFrom: "Swing", pastSimple: "Swung", pastParticiple: "Swung" },
-                        "take": {  baseFrom: "Take", pastSimple: "Took", pastParticiple: "Taken" },
-                        "teach": {  baseFrom: "Teach", pastSimple: "Taught", pastParticiple: "Taught" },
-                        "tear": {  baseFrom: "Tear", pastSimple: "Tore", pastParticiple: "Torn" },
-                        "tell": {  baseFrom: "Tell", pastSimple: "Told", pastParticiple: "Told" },
-                        "think": {  baseFrom: "Think", pastSimple: "Thought", pastParticiple: "Thought" },
-                        "thrive": {  baseFrom: "Thrive", pastSimple: "Throve/Thrived", pastParticiple: "Thriven/Thrived" },
-                        "throw": {  baseFrom: "Throw", pastSimple: "Threw", pastParticiple: "Thrown" },
-                        "thrust": {  baseFrom: "Thrust", pastSimple: "Thrust", pastParticiple: "Thrust" },
-                        "tread": {  baseFrom: "Tread", pastSimple: "Trod", pastParticiple: "Trodden" },
-                        "undergo": {  baseFrom: "Undergo", pastSimple: "Underwent", pastParticiple: "Undergone" },
-                        "understand": {  baseFrom: "Understand", pastSimple: "Understood", pastParticiple: "Understood" },
-                        "undertake": {  baseFrom: "Undertake", pastSimple: "Undertook", pastParticiple: "Undertaken" },
-                        "upsell": {  baseFrom: "Upsell", pastSimple: "Upsold", pastParticiple: "Upsold" },
-                        "upset": {  baseFrom: "Upset", pastSimple: "Upset", pastParticiple: "Upset" },
-                        "vex": {  baseFrom: "Vex", pastSimple: "Vext/Vexed", pastParticiple: "Vext/Vexed" },
-                        "wake": {  baseFrom: "Wake", pastSimple: "Woke", pastParticiple: "Woken" },
-                        "wear": {  baseFrom: "Wear", pastSimple: "Wore", pastParticiple: "Worn" },
-                        "weave": {  baseFrom: "Weave", pastSimple: "Wove", pastParticiple: "Woven" },
-                        "wed": {  baseFrom: "Wed", pastSimple: "Wed/Wedded", pastParticiple: "Wed/Wedded" },
-                        "weep": {  baseFrom: "Weep", pastSimple: "Wept", pastParticiple: "Wept" },
-                        "wend": {  baseFrom: "Wend", pastSimple: "Wended/Went", pastParticiple: "Wended/Went" },
-                        "wet": {  baseFrom: "Wet", pastSimple: "Wet/Wetted", pastParticiple: "Wet/Wetted" },
-                        "win": {  baseFrom: "Win", pastSimple: "Won", pastParticiple: "Won" },
-                        "wind": {  baseFrom: "Wind", pastSimple: "Wound", pastParticiple: "Wound" },
-                        "withdraw": {  baseFrom: "Withdraw", pastSimple: "Withdrew", pastParticiple: "Withdrawn" },
-                        "withhold": {  baseFrom: "Withhold", pastSimple: "Withheld", pastParticiple: "Withheld" },
-                        "withstand": {  baseFrom: "Withstand", pastSimple: "Withstood", pastParticiple: "Withstood" },
-                        "wring": {  baseFrom: "Wring", pastSimple: "Wrung", pastParticiple: "Wrung" },
-                        "write": {  baseFrom: "Write", pastSimple: "Wrote", pastParticiple: "Written" },
-                        "zinc": {  baseFrom: "Zinc", pastSimple: "Zinced/Zincked", pastParticiple: "Zinced/Zincked" }
+                        "awake": {  baseFrom: "awake", pastSimple: "awoke", pastParticiple: "awoken" },
+                        "be": {  baseFrom: "be", pastSimple: "was/were", pastParticiple: "been" },
+                        "bear": {  baseFrom: "bear", pastSimple: "bore", pastParticiple: "born/borne" },
+                        "beat": {  baseFrom: "beat", pastSimple: "beat", pastParticiple: "beaten" },
+                        "become": {  baseFrom: "become", pastSimple: "became", pastParticiple: "become" },
+                        "begin": {  baseFrom: "begin", pastSimple: "began", pastParticiple: "begun" },
+                        "behold": {  baseFrom: "behold", pastSimple: "beheld", pastParticiple: "beheld" },
+                        "bend": {  baseFrom: "bend", pastSimple: "bent", pastParticiple: "bent" },
+                        "bet": {  baseFrom: "bet", pastSimple: "bet", pastParticiple: "bet" },
+                        "bid": {  baseFrom: "bid", pastSimple: "bade", pastParticiple: "bidden" },
+                        "bid": {  baseFrom: "bid", pastSimple: "bid", pastParticiple: "bid" },
+                        "bind": {  baseFrom: "bind", pastSimple: "bound", pastParticiple: "bound" },
+                        "bite": {  baseFrom: "bite", pastSimple: "bit", pastParticiple: "bitten" },
+                        "bleed": {  baseFrom: "bleed", pastSimple: "bled", pastParticiple: "bled" },
+                        "blow": {  baseFrom: "blow", pastSimple: "blew", pastParticiple: "blown" },
+                        "break": {  baseFrom: "break", pastSimple: "broke", pastParticiple: "broken" },
+                        "breed": {  baseFrom: "breed", pastSimple: "bred", pastParticiple: "bred" },
+                        "bring": {  baseFrom: "bring", pastSimple: "brought", pastParticiple: "brought" },
+                        "broadcast": {  baseFrom: "broadcast", pastSimple: "broadcast/Broadcasted", pastParticiple: "broadcast/Broadcasted" },
+                        "build": {  baseFrom: "build", pastSimple: "built", pastParticiple: "built" },
+                        "burn": {  baseFrom: "burn", pastSimple: "burnt/Burned", pastParticiple: "burnt/Burned" },
+                        "burst": {  baseFrom: "burst", pastSimple: "burst", pastParticiple: "burst" },
+                        "bust": {  baseFrom: "bust", pastSimple: "bust", pastParticiple: "bust" },
+                        "buy": {  baseFrom: "buy", pastSimple: "bought", pastParticiple: "bought" },
+                        "cast": {  baseFrom: "cast", pastSimple: "cast", pastParticiple: "cast" },
+                        "catch": {  baseFrom: "catch", pastSimple: "caught", pastParticiple: "caught" },
+                        "choose": {  baseFrom: "choose", pastSimple: "chose", pastParticiple: "chosen" },
+                        "clap": {  baseFrom: "clap", pastSimple: "clapped/Clapt", pastParticiple: "clapped/Clapt" },
+                        "cling": {  baseFrom: "cling", pastSimple: "clung", pastParticiple: "clung" },
+                        "clothe": {  baseFrom: "clothe", pastSimple: "clad/Clothed", pastParticiple: "clad/Clothed" },
+                        "come": {  baseFrom: "come", pastSimple: "came", pastParticiple: "come" },
+                        "cost": {  baseFrom: "cost", pastSimple: "cost", pastParticiple: "cost" },
+                        "creep": {  baseFrom: "creep", pastSimple: "crept", pastParticiple: "crept" },
+                        "cut": {  baseFrom: "cut", pastSimple: "cut", pastParticiple: "cut" },
+                        "dare": {  baseFrom: "dare", pastSimple: "dared/Durst", pastParticiple: "dared" },
+                        "deal": {  baseFrom: "deal", pastSimple: "dealt", pastParticiple: "dealt" },
+                        "dig": {  baseFrom: "dig", pastSimple: "dug", pastParticiple: "dug" },
+                        "dive": {  baseFrom: "dive", pastSimple: "dived/Dove", pastParticiple: "dived" },
+                        "do": {  baseFrom: "do", pastSimple: "did", pastParticiple: "done" },
+                        "draw": {  baseFrom: "draw", pastSimple: "drew", pastParticiple: "drawn" },
+                        "dream": {  baseFrom: "dream", pastSimple: "dreamt/Dreamed", pastParticiple: "dreamt/Dreamed" },
+                        "drink": {  baseFrom: "drink", pastSimple: "drank", pastParticiple: "drunk" },
+                        "drive": {  baseFrom: "drive", pastSimple: "drove", pastParticiple: "driven" },
+                        "dwell": {  baseFrom: "dwell", pastSimple: "dwelt", pastParticiple: "dwelt" },
+                        "eat": {  baseFrom: "eat", pastSimple: "ate", pastParticiple: "eaten" },
+                        "fall": {  baseFrom: "fall", pastSimple: "fell", pastParticiple: "fallen" },
+                        "feed": {  baseFrom: "feed", pastSimple: "fed", pastParticiple: "fed" },
+                        "feel": {  baseFrom: "feel", pastSimple: "felt", pastParticiple: "felt" },
+                        "fight": {  baseFrom: "fight", pastSimple: "fought", pastParticiple: "fought" },
+                        "find": {  baseFrom: "find", pastSimple: "found", pastParticiple: "found" },
+                        "fit": {  baseFrom: "fit", pastSimple: "fit/Fitted", pastParticiple: "fit/Fitted" },
+                        "flee": {  baseFrom: "flee", pastSimple: "fled", pastParticiple: "fled" },
+                        "fling": {  baseFrom: "fling", pastSimple: "flung", pastParticiple: "flung" },
+                        "fly": {  baseFrom: "fly", pastSimple: "flew", pastParticiple: "flown" },
+                        "forbid": {  baseFrom: "forbid", pastSimple: "forbade/Forbad", pastParticiple: "forbidden" },
+                        "forecast": {  baseFrom: "forecast", pastSimple: "forecast/Forecasted", pastParticiple: "forecast/Forecasted" },
+                        "foresee": {  baseFrom: "foresee", pastSimple: "foresaw", pastParticiple: "foreseen" },
+                        "foretell": {  baseFrom: "foretell", pastSimple: "foretold", pastParticiple: "foretold" },
+                        "forget": {  baseFrom: "forget", pastSimple: "forgot", pastParticiple: "forgotten" },
+                        "forgive": {  baseFrom: "forgive", pastSimple: "forgave", pastParticiple: "forgiven" },
+                        "forsake": {  baseFrom: "forsake", pastSimple: "forsook", pastParticiple: "forsaken" },
+                        "freeze": {  baseFrom: "freeze", pastSimple: "froze", pastParticiple: "frozen" },
+                        "frostbite": {  baseFrom: "frostbite", pastSimple: "frostbit", pastParticiple: "frostbitten" },
+                        "get": {  baseFrom: "get", pastSimple: "got", pastParticiple: "got/Gotten" },
+                        "give": {  baseFrom: "give", pastSimple: "gave", pastParticiple: "given" },
+                        "go": {  baseFrom: "go", pastSimple: "went", pastParticiple: "gone/Been" },
+                        "grind": {  baseFrom: "grind", pastSimple: "ground", pastParticiple: "ground" },
+                        "grow": {  baseFrom: "grow", pastSimple: "grew", pastParticiple: "grown" },
+                        "handwrite": {  baseFrom: "handwrite", pastSimple: "handwrote", pastParticiple: "handwritten" },
+                        "hang": {  baseFrom: "hang", pastSimple: "hung/Hanged", pastParticiple: "hung/Hanged" },
+                        "have": {  baseFrom: "have", pastSimple: "had", pastParticiple: "had" },
+                        "hear": {  baseFrom: "hear", pastSimple: "heard", pastParticiple: "heard" },
+                        "hide": {  baseFrom: "hide", pastSimple: "hid", pastParticiple: "hidden" },
+                        "hit": {  baseFrom: "hit", pastSimple: "hit", pastParticiple: "hit" },
+                        "hold": {  baseFrom: "hold", pastSimple: "held", pastParticiple: "held" },
+                        "hurt": {  baseFrom: "hurt", pastSimple: "hurt", pastParticiple: "hurt" },
+                        "inlay": {  baseFrom: "inlay", pastSimple: "inlaid", pastParticiple: "inlaid" },
+                        "input": {  baseFrom: "input", pastSimple: "input/Inputted", pastParticiple: "input/Inputted" },
+                        "interlay": {  baseFrom: "interlay", pastSimple: "interlaid", pastParticiple: "interlaid" },
+                        "keep": {  baseFrom: "keep", pastSimple: "kept", pastParticiple: "kept" },
+                        "kneel": {  baseFrom: "kneel", pastSimple: "knelt/Kneeled", pastParticiple: "knelt/Kneeled" },
+                        "knit": {  baseFrom: "knit", pastSimple: "knit/Knitted", pastParticiple: "knit/Knitted" },
+                        "know": {  baseFrom: "know", pastSimple: "knew", pastParticiple: "known" },
+                        "lay": {  baseFrom: "lay", pastSimple: "laid", pastParticiple: "laid" },
+                        "lead": {  baseFrom: "lead", pastSimple: "led", pastParticiple: "led" },
+                        "lean": {  baseFrom: "lean", pastSimple: "leant/Leaned", pastParticiple: "leant/Leaned" },
+                        "leap": {  baseFrom: "leap", pastSimple: "leapt/Leaped", pastParticiple: "leapt/Leaped" },
+                        "learn": {  baseFrom: "learn", pastSimple: "learnt/Learned", pastParticiple: "learnt/Learned" },
+                        "leave": {  baseFrom: "leave", pastSimple: "left", pastParticiple: "left" },
+                        "lend": {  baseFrom: "lend", pastSimple: "lent", pastParticiple: "lent" },
+                        "let": {  baseFrom: "let", pastSimple: "let", pastParticiple: "let" },
+                        "lie": {  baseFrom: "lie", pastSimple: "lay", pastParticiple: "lain" },
+                        "light": {  baseFrom: "light", pastSimple: "lit", pastParticiple: "lit" },
+                        "lose": {  baseFrom: "lose", pastSimple: "lost", pastParticiple: "lost" },
+                        "make": {  baseFrom: "make", pastSimple: "made", pastParticiple: "made" },
+                        "mean": {  baseFrom: "mean", pastSimple: "meant", pastParticiple: "meant" },
+                        "meet": {  baseFrom: "meet", pastSimple: "met", pastParticiple: "met" },
+                        "melt": {  baseFrom: "melt", pastSimple: "melted", pastParticiple: "molten/Melted" },
+                        "mislead": {  baseFrom: "mislead", pastSimple: "misled", pastParticiple: "misled" },
+                        "mistake": {  baseFrom: "mistake", pastSimple: "mistook", pastParticiple: "mistaken" },
+                        "misunderstand": {  baseFrom: "misunderstand", pastSimple: "misunderstood", pastParticiple: "misunderstood" },
+                        "miswed": {  baseFrom: "miswed", pastSimple: "miswed/Miswedded", pastParticiple: "miswed/Miswedded" },
+                        "mow": {  baseFrom: "mow", pastSimple: "mowed", pastParticiple: "mown" },
+                        "overdraw": {  baseFrom: "overdraw", pastSimple: "overdrew", pastParticiple: "overdrawn" },
+                        "overhear": {  baseFrom: "overhear", pastSimple: "overheard", pastParticiple: "overheard" },
+                        "overtake": {  baseFrom: "overtake", pastSimple: "overtook", pastParticiple: "overtaken" },
+                        "pay": {  baseFrom: "pay", pastSimple: "paid", pastParticiple: "paid" },
+                        "preset": {  baseFrom: "preset", pastSimple: "preset", pastParticiple: "preset" },
+                        "prove": {  baseFrom: "prove", pastSimple: "proved", pastParticiple: "proven/Proved" },
+                        "put": {  baseFrom: "put", pastSimple: "put", pastParticiple: "put" },
+                        "quit": {  baseFrom: "quit", pastSimple: "quit", pastParticiple: "quit" },
+                        "re-prove": {  baseFrom: "re-prove", pastSimple: "re-proved", pastParticiple: "re-proven/Re-proved" },
+                        "read": {  baseFrom: "read", pastSimple: "read", pastParticiple: "read" },
+                        "rid": {  baseFrom: "rid", pastSimple: "rid/Ridded", pastParticiple: "rid/Ridded" },
+                        "ride": {  baseFrom: "ride", pastSimple: "rode", pastParticiple: "ridden" },
+                        "ring": {  baseFrom: "ring", pastSimple: "rang", pastParticiple: "rung" },
+                        "rise": {  baseFrom: "rise", pastSimple: "rose", pastParticiple: "risen" },
+                        "rive": {  baseFrom: "rive", pastSimple: "rived", pastParticiple: "riven/Rived" },
+                        "run": {  baseFrom: "run", pastSimple: "ran", pastParticiple: "run" },
+                        "saw": {  baseFrom: "saw", pastSimple: "sawed", pastParticiple: "sawn/Sawed" },
+                        "say": {  baseFrom: "say", pastSimple: "said", pastParticiple: "said" },
+                        "see": {  baseFrom: "see", pastSimple: "saw", pastParticiple: "seen" },
+                        "seek": {  baseFrom: "seek", pastSimple: "sought", pastParticiple: "sought" },
+                        "sell": {  baseFrom: "sell", pastSimple: "sold", pastParticiple: "sold" },
+                        "send": {  baseFrom: "send", pastSimple: "sent", pastParticiple: "sent" },
+                        "set": {  baseFrom: "set", pastSimple: "set", pastParticiple: "set" },
+                        "sew": {  baseFrom: "sew", pastSimple: "sewed", pastParticiple: "sewn/Sewed" },
+                        "shake": {  baseFrom: "shake", pastSimple: "shook", pastParticiple: "shaken" },
+                        "shave": {  baseFrom: "shave", pastSimple: "shaved", pastParticiple: "shaven/Shaved" },
+                        "shear": {  baseFrom: "shear", pastSimple: "shore/Sheared", pastParticiple: "shorn/Sheared" },
+                        "shed": {  baseFrom: "shed", pastSimple: "shed", pastParticiple: "shed" },
+                        "shine": {  baseFrom: "shine", pastSimple: "shone", pastParticiple: "shone" },
+                        "shoe": {  baseFrom: "shoe", pastSimple: "shod", pastParticiple: "shod" },
+                        "shoot": {  baseFrom: "shoot", pastSimple: "shot", pastParticiple: "shot" },
+                        "show": {  baseFrom: "show", pastSimple: "showed", pastParticiple: "shown" },
+                        "shrink": {  baseFrom: "shrink", pastSimple: "shrank", pastParticiple: "shrunk" },
+                        "shut": {  baseFrom: "shut", pastSimple: "shut", pastParticiple: "shut" },
+                        "sing": {  baseFrom: "sing", pastSimple: "sang", pastParticiple: "sung" },
+                        "sink": {  baseFrom: "sink", pastSimple: "sank", pastParticiple: "sunk" },
+                        "sit": {  baseFrom: "sit", pastSimple: "sat", pastParticiple: "sat" },
+                        "slay": {  baseFrom: "slay", pastSimple: "slew", pastParticiple: "slain" },
+                        "sleep": {  baseFrom: "sleep", pastSimple: "slept", pastParticiple: "slept" },
+                        "slide": {  baseFrom: "slide", pastSimple: "slid", pastParticiple: "slid/Slidden" },
+                        "sling": {  baseFrom: "sling", pastSimple: "slung", pastParticiple: "slung" },
+                        "slink": {  baseFrom: "slink", pastSimple: "slunk", pastParticiple: "slunk" },
+                        "slit": {  baseFrom: "slit", pastSimple: "slit", pastParticiple: "slit" },
+                        "smell": {  baseFrom: "smell", pastSimple: "smelt/Smelled", pastParticiple: "smelt/Smelled" },
+                        "sneak": {  baseFrom: "sneak", pastSimple: "sneaked/Snuck", pastParticiple: "sneaked/Snuck" },
+                        "soothsay": {  baseFrom: "soothsay", pastSimple: "soothsaid", pastParticiple: "soothsaid" },
+                        "sow": {  baseFrom: "sow", pastSimple: "sowed", pastParticiple: "sown" },
+                        "speak": {  baseFrom: "speak", pastSimple: "spoke", pastParticiple: "spoken" },
+                        "speed": {  baseFrom: "speed", pastSimple: "sped/Speeded", pastParticiple: "sped/Speeded" },
+                        "spell": {  baseFrom: "spell", pastSimple: "spelt/Spelled", pastParticiple: "spelt/Spelled" },
+                        "spend": {  baseFrom: "spend", pastSimple: "spent", pastParticiple: "spent" },
+                        "spill": {  baseFrom: "spill", pastSimple: "spilt/Spilled", pastParticiple: "spilt/Spilled" },
+                        "spin": {  baseFrom: "spin", pastSimple: "span/Spun", pastParticiple: "spun" },
+                        "spit": {  baseFrom: "spit", pastSimple: "spat/Spit", pastParticiple: "spat/Spit" },
+                        "split": {  baseFrom: "split", pastSimple: "split", pastParticiple: "split" },
+                        "spoil": {  baseFrom: "spoil", pastSimple: "spoilt/Spoiled", pastParticiple: "spoilt/Spoiled" },
+                        "spread": {  baseFrom: "spread", pastSimple: "spread", pastParticiple: "spread" },
+                        "spring": {  baseFrom: "spring", pastSimple: "sprang", pastParticiple: "sprung" },
+                        "stand": {  baseFrom: "stand", pastSimple: "stood", pastParticiple: "stood" },
+                        "steal": {  baseFrom: "steal", pastSimple: "stole", pastParticiple: "stolen" },
+                        "stick": {  baseFrom: "stick", pastSimple: "stuck", pastParticiple: "stuck" },
+                        "sting": {  baseFrom: "sting", pastSimple: "stung", pastParticiple: "stung" },
+                        "stink": {  baseFrom: "stink", pastSimple: "stank", pastParticiple: "stunk" },
+                        "stride": {  baseFrom: "stride", pastSimple: "strode/Strided", pastParticiple: "stridden" },
+                        "strike": {  baseFrom: "strike", pastSimple: "struck", pastParticiple: "struck/Stricken" },
+                        "string": {  baseFrom: "string", pastSimple: "strung", pastParticiple: "strung" },
+                        "strip": {  baseFrom: "strip", pastSimple: "stript/Stripped", pastParticiple: "stript/Stripped" },
+                        "strive": {  baseFrom: "strive", pastSimple: "strove", pastParticiple: "striven" },
+                        "sublet": {  baseFrom: "sublet", pastSimple: "sublet", pastParticiple: "sublet" },
+                        "sunburn": {  baseFrom: "sunburn", pastSimple: "sunburned/Sunburnt", pastParticiple: "sunburned/Sunburnt" },
+                        "swear": {  baseFrom: "swear", pastSimple: "swore", pastParticiple: "sworn" },
+                        "sweat": {  baseFrom: "sweat", pastSimple: "sweat/Sweated", pastParticiple: "sweat/Sweated" },
+                        "sweep": {  baseFrom: "sweep", pastSimple: "swept/Sweeped", pastParticiple: "swept/Sweeped" },
+                        "swell": {  baseFrom: "swell", pastSimple: "swelled", pastParticiple: "swollen" },
+                        "swim": {  baseFrom: "swim", pastSimple: "swam", pastParticiple: "swum" },
+                        "swing": {  baseFrom: "swing", pastSimple: "swung", pastParticiple: "swung" },
+                        "take": {  baseFrom: "take", pastSimple: "took", pastParticiple: "taken" },
+                        "teach": {  baseFrom: "teach", pastSimple: "taught", pastParticiple: "taught" },
+                        "tear": {  baseFrom: "tear", pastSimple: "tore", pastParticiple: "torn" },
+                        "tell": {  baseFrom: "tell", pastSimple: "told", pastParticiple: "told" },
+                        "think": {  baseFrom: "think", pastSimple: "thought", pastParticiple: "thought" },
+                        "thrive": {  baseFrom: "thrive", pastSimple: "throve/Thrived", pastParticiple: "thriven/Thrived" },
+                        "throw": {  baseFrom: "throw", pastSimple: "threw", pastParticiple: "thrown" },
+                        "thrust": {  baseFrom: "thrust", pastSimple: "thrust", pastParticiple: "thrust" },
+                        "tread": {  baseFrom: "tread", pastSimple: "trod", pastParticiple: "trodden" },
+                        "undergo": {  baseFrom: "undergo", pastSimple: "underwent", pastParticiple: "undergone" },
+                        "understand": {  baseFrom: "understand", pastSimple: "understood", pastParticiple: "understood" },
+                        "undertake": {  baseFrom: "undertake", pastSimple: "undertook", pastParticiple: "undertaken" },
+                        "upsell": {  baseFrom: "upsell", pastSimple: "upsold", pastParticiple: "upsold" },
+                        "upset": {  baseFrom: "upset", pastSimple: "upset", pastParticiple: "upset" },
+                        "vex": {  baseFrom: "vex", pastSimple: "vext/Vexed", pastParticiple: "vext/Vexed" },
+                        "wake": {  baseFrom: "wake", pastSimple: "woke", pastParticiple: "woken" },
+                        "wear": {  baseFrom: "wear", pastSimple: "wore", pastParticiple: "worn" },
+                        "weave": {  baseFrom: "weave", pastSimple: "wove", pastParticiple: "woven" },
+                        "wed": {  baseFrom: "wed", pastSimple: "wed/Wedded", pastParticiple: "wed/Wedded" },
+                        "weep": {  baseFrom: "weep", pastSimple: "wept", pastParticiple: "wept" },
+                        "wend": {  baseFrom: "wend", pastSimple: "wended/Went", pastParticiple: "wended/Went" },
+                        "wet": {  baseFrom: "wet", pastSimple: "wet/Wetted", pastParticiple: "wet/Wetted" },
+                        "win": {  baseFrom: "win", pastSimple: "won", pastParticiple: "won" },
+                        "wind": {  baseFrom: "wind", pastSimple: "wound", pastParticiple: "wound" },
+                        "withdraw": {  baseFrom: "withdraw", pastSimple: "withdrew", pastParticiple: "withdrawn" },
+                        "withhold": {  baseFrom: "withhold", pastSimple: "withheld", pastParticiple: "withheld" },
+                        "withstand": {  baseFrom: "withstand", pastSimple: "withstood", pastParticiple: "withstood" },
+                        "wring": {  baseFrom: "wring", pastSimple: "wrung", pastParticiple: "wrung" },
+                        "write": {  baseFrom: "write", pastSimple: "wrote", pastParticiple: "written" },
+                        "zinc": {  baseFrom: "zinc", pastSimple: "zinced/Zincked", pastParticiple: "zinced/Zincked" }
 };
 
                 function isIrregular ( verb ) {
@@ -261,9 +261,9 @@
                 function getVerbByTense ( t1, t2, verb ) {
                     var verb = verb.toLowerCase();
 
-                    if ( t2 === "SIMPLE" ) {
-                        if ( t1 === "PAST" ) {
-                            console.log("PAST SIMPLE");
+                    if ( t2 === "sIMPLE" ) {
+                        if ( t1 === "pAST" ) {
+                            console.log("pAST SIMPLE");
                             if( isIrregular ( verb ) ) {
                                 return irregularVerbs[verb].pastSimple;
                             } else if (verb.endsWith( "e" ) ) {
@@ -279,11 +279,11 @@
                             } else {
                                 return verb + "ed";
                             }
-                        } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
+                        } else if ( t1 === "pRESENT" || t1 === "fUTURE" ) {
                             return verb;
                         }
-                    } else if ( t2 === "CONTINUOUS" ) {
-                        if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
+                    } else if ( t2 === "cONTINUOUS" ) {
+                        if ( t1 === "pAST" || t1 === "pRESENT" || t1 === "fUTURE" ) {
                             console.log("* CONTINUOUS");
 
                             if ( verb.endsWith( "ie" ) ) {
@@ -303,16 +303,16 @@
                             }
                         }
 
-                    } else if ( t2 === "PERFECT" ) {
+                    } else if ( t2 === "pERFECT" ) {
                         console.log("* PERFECT");
                         if( isIrregular ( verb ) ) {
                             return irregularVerbs[verb].pastParticiple;
                         } else {
-                            return getVerbByTense("PAST", "SIMPLE", verb );
+                            return getVerbByTense("pAST", "sIMPLE", verb );
                         }
-                    } else if ( t2 === "PERFECTCONTINUOUS" ) {
+                    } else if ( t2 === "pERFECTCONTINUOUS" ) {
                         console.log("* PERFECT CONTINUOUS");
-                        return getVerbByTense("PRESENT", "CONTINUOUS", verb );
+                        return getVerbByTense("pRESENT", "cONTINUOUS", verb );
                     }
                 }
 
@@ -326,7 +326,7 @@
         </script>
     </head>
     <body>
-        <div ng-controller="MainController">
+        <div ng-controller="mainController">
             <table>
                 <thead>
                     <tr>
@@ -339,27 +339,27 @@
                 <tbody>
                     <tr>
                         <td>SIMPLE</td>
-                        <td>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}</td>
-                        <td>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}</td>
-                        <td>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}</td>
+                        <td>I {{ getVerbByTense("pAST", "sIMPLE", originalVerb ) }}</td>
+                        <td>I {{ getVerbByTense("pRESENT", "sIMPLE", originalVerb ) }}</td>
+                        <td>I will {{ getVerbByTense("fUTURE", "sIMPLE", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>CONTINUOUS</td>
-                        <td>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}</td>
-                        <td>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}</td>
-                        <td>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}</td>
+                        <td>I was {{ getVerbByTense("pAST", "cONTINUOUS", originalVerb ) }}</td>
+                        <td>I am {{ getVerbByTense("pRESENT", "cONTINUOUS", originalVerb ) }}</td>
+                        <td>I will be {{ getVerbByTense("fUTURE", "cONTINUOUS", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT</td>
-                        <td>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}</td>
-                        <td>I have {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}</td>
-                        <td>I will have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}</td>
+                        <td>I had {{ getVerbByTense("pAST", "pERFECT", originalVerb ) }}</td>
+                        <td>I have {{ getVerbByTense("pRESENT", "pERFECT", originalVerb ) }}</td>
+                        <td>I will have {{ getVerbByTense("fUTURE", "pERFECT", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT CONTINUOUS</td>
-                        <td>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I had been {{ getVerbByTense("pAST", "pERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I have been {{ getVerbByTense("pRESENT", "pERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I will have been {{ getVerbByTense("fUTURE", "pERFECTCONTINUOUS", originalVerb ) }}</td>
                     </tr>
                 </tbody>
                 <tfoot></tfoot>
