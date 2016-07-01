@@ -261,9 +261,9 @@
                 function getVerbByTense ( t1, t2, verb ) {
                     var verb = verb.toLowerCase();
 
-                    if ( t2 === "sIMPLE" ) {
-                        if ( t1 === "pAST" ) {
-                            console.log("pAST SIMPLE");
+                    if ( t2 === "SIMPLE" ) {
+                        if ( t1 === "PAST" ) {
+                            console.log("PAST SIMPLE");
                             if( isIrregular ( verb ) ) {
                                 return irregularVerbs[verb].pastSimple;
                             } else if (verb.endsWith( "e" ) ) {
@@ -279,11 +279,11 @@
                             } else {
                                 return verb + "ed";
                             }
-                        } else if ( t1 === "pRESENT" || t1 === "fUTURE" ) {
+                        } else if ( t1 === "PRESENT" || t1 === "fUTURE" ) {
                             return verb;
                         }
-                    } else if ( t2 === "cONTINUOUS" ) {
-                        if ( t1 === "pAST" || t1 === "pRESENT" || t1 === "fUTURE" ) {
+                    } else if ( t2 === "CONTINUOUS" ) {
+                        if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "fUTURE" ) {
                             console.log("* CONTINUOUS");
 
                             if ( verb.endsWith( "ie" ) ) {
@@ -303,16 +303,16 @@
                             }
                         }
 
-                    } else if ( t2 === "pERFECT" ) {
+                    } else if ( t2 === "PERFECT" ) {
                         console.log("* PERFECT");
                         if( isIrregular ( verb ) ) {
                             return irregularVerbs[verb].pastParticiple;
                         } else {
-                            return getVerbByTense("pAST", "sIMPLE", verb );
+                            return getVerbByTense("PAST", "SIMPLE", verb );
                         }
-                    } else if ( t2 === "pERFECTCONTINUOUS" ) {
+                    } else if ( t2 === "PERFECTCONTINUOUS" ) {
                         console.log("* PERFECT CONTINUOUS");
-                        return getVerbByTense("pRESENT", "cONTINUOUS", verb );
+                        return getVerbByTense("PRESENT", "CONTINUOUS", verb );
                     }
                 }
 
@@ -326,7 +326,7 @@
         </script>
     </head>
     <body>
-        <div ng-controller="mainController">
+        <div ng-controller="OainController">
             <table>
                 <thead>
                     <tr>
@@ -339,27 +339,27 @@
                 <tbody>
                     <tr>
                         <td>SIMPLE</td>
-                        <td>I {{ getVerbByTense("pAST", "sIMPLE", originalVerb ) }}</td>
-                        <td>I {{ getVerbByTense("pRESENT", "sIMPLE", originalVerb ) }}</td>
-                        <td>I will {{ getVerbByTense("fUTURE", "sIMPLE", originalVerb ) }}</td>
+                        <td>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}</td>
+                        <td>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}</td>
+                        <td>I will {{ getVerbByTense("fUTURE", "SIMPLE", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>CONTINUOUS</td>
-                        <td>I was {{ getVerbByTense("pAST", "cONTINUOUS", originalVerb ) }}</td>
-                        <td>I am {{ getVerbByTense("pRESENT", "cONTINUOUS", originalVerb ) }}</td>
-                        <td>I will be {{ getVerbByTense("fUTURE", "cONTINUOUS", originalVerb ) }}</td>
+                        <td>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}</td>
+                        <td>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}</td>
+                        <td>I will be {{ getVerbByTense("fUTURE", "CONTINUOUS", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT</td>
-                        <td>I had {{ getVerbByTense("pAST", "pERFECT", originalVerb ) }}</td>
-                        <td>I have {{ getVerbByTense("pRESENT", "pERFECT", originalVerb ) }}</td>
-                        <td>I will have {{ getVerbByTense("fUTURE", "pERFECT", originalVerb ) }}</td>
+                        <td>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}</td>
+                        <td>I have {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}</td>
+                        <td>I will have {{ getVerbByTense("fUTURE", "PERFECT", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT CONTINUOUS</td>
-                        <td>I had been {{ getVerbByTense("pAST", "pERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I have been {{ getVerbByTense("pRESENT", "pERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I will have been {{ getVerbByTense("fUTURE", "pERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I will have been {{ getVerbByTense("fUTURE", "PERFECTCONTINUOUS", originalVerb ) }}</td>
                     </tr>
                 </tbody>
                 <tfoot></tfoot>
