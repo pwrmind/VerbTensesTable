@@ -258,32 +258,37 @@
                     return verb;
                 }
 
+                function getPastSimple ( verb ) {
+                    if( isIrregular ( verb ) ) {
+                        return irregularVerbs[verb].pastSimple;
+                    } else if (verb.endsWith( "e" ) ) {
+                        return verb + "d";
+                    } else if ( verb.endsWith( "y" ) ) {
+                        if ( isVowel( verb.substr( -2, 1 ) ) ) {
+                            return verb + "ed";
+                        } else {
+                            return verb.substring( 0, verb.length - 1 ) + "ied";
+                        }
+                    } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
+                        return verb + verb.substr( -1, 1 ) + "ed";
+                    } else {
+                        return verb + "ed";
+                    }
+                }
+
                 function getVerbByTense ( t1, t2, verb ) {
                     var verb = verb.toLowerCase();
 
                     if ( t2 === "SIMPLE" ) {
                         if ( t1 === "PAST" ) {
                             console.log("PAST SIMPLE");
-                            if( isIrregular ( verb ) ) {
-                                return irregularVerbs[verb].pastSimple;
-                            } else if (verb.endsWith( "e" ) ) {
-                                return verb + "d";
-                            } else if ( verb.endsWith( "y" ) ) {
-                                if ( isVowel( verb.substr( -2, 1 ) ) ) {
-                                    return verb + "ed";
-                                } else {
-                                    return verb.substring( 0, verb.length - 1 ) + "ied";
-                                }
-                            } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                                return verb + verb.substr( -1, 1 ) + "ed";
-                            } else {
-                                return verb + "ed";
-                            }
-                        } else if ( t1 === "PRESENT" || t1 === "fUTURE" ) {
+                            return getPastSimple( verb );
+                            
+                        } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
                             return verb;
                         }
                     } else if ( t2 === "CONTINUOUS" ) {
-                        if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "fUTURE" ) {
+                        if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
                             console.log("* CONTINUOUS");
 
                             if ( verb.endsWith( "ie" ) ) {
@@ -339,27 +344,29 @@
                 <tbody>
                     <tr>
                         <td>SIMPLE</td>
-                        <td>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}</td>
+                        <td>
+                            <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}</div>
+                        </td>
                         <td>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}</td>
-                        <td>I will {{ getVerbByTense("fUTURE", "SIMPLE", originalVerb ) }}</td>
+                        <td>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>CONTINUOUS</td>
                         <td>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}</td>
                         <td>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}</td>
-                        <td>I will be {{ getVerbByTense("fUTURE", "CONTINUOUS", originalVerb ) }}</td>
+                        <td>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT</td>
                         <td>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}</td>
                         <td>I have {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}</td>
-                        <td>I will have {{ getVerbByTense("fUTURE", "PERFECT", originalVerb ) }}</td>
+                        <td>I will have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}</td>
                     </tr>
                     <tr>
                         <td>PERFECT CONTINUOUS</td>
                         <td>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</td>
                         <td>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I will have been {{ getVerbByTense("fUTURE", "PERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}</td>
                     </tr>
                 </tbody>
                 <tfoot></tfoot>
