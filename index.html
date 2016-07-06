@@ -4,7 +4,9 @@
         <title>VTT - Verb Tenses Table</title>
         <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <style>
+            /*
             table {
                     width: 100%;
                 }
@@ -12,6 +14,7 @@
                 width: 25%;
                 text-align: left;
             }
+            */
         </style>
         <script>
 
@@ -332,7 +335,7 @@
     </head>
     <body>
         <div ng-controller="MainController">
-            <table>
+            <table class="table-hover">
                 <thead>
                     <tr>
                         <th><input id="originalVerb" ng-model="originalVerb" type="text"></th>
@@ -343,7 +346,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>SIMPLE</td>
+                        <td><b>SIMPLE</b></td>
                         <td>
                             <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}.</div>
                             <div>Did I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
@@ -361,7 +364,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>CONTINUOUS</td>
+                        <td><b>CONTINUOUS</b></td>
                         <td>
                             <div>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}.</div>
                             <div>Was I {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}?</div>
@@ -379,7 +382,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>PERFECT</td>
+                        <td><b>PERFECT</b></td>
                         <td>
                             <div>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}.</div>
                             <div>Had I {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}?</div>
@@ -397,7 +400,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>PERFECT CONTINUOUS</td>
+                        <td><b>PERFECT CONTINUOUS</b></td>
                         <td>
                             <div>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
                             <div>Had I been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
