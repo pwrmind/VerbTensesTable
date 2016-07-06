@@ -358,7 +358,7 @@
                         return verbInPictures[verb];
                     }
 
-                    $scope.originalVerb = "play";
+                    $scope.originalVerb = "pack";
 
                     $scope.getVerbByTense = function ( t1, t2, verb ) {
                         return getVerbByTense( t1, t2, verb );
@@ -460,7 +460,7 @@
                 </table>
             </p>
             <p>
-                <img ng-src="{{ getPictureByVerb( originalVerb ) }}" alt="{{ originalVerb }}" />
+                <img ng-if="getPictureByVerb( originalVerb )" ng-src="{{ getPictureByVerb( originalVerb ) }}" alt="{{ originalVerb }}" />
             </p>
         </div>
     </body>
