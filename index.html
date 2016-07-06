@@ -4,6 +4,7 @@
         <title>VTT - Verb Tenses Table</title>
         <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.7/angular-route.min.js"></script>
         <!-- Latest compiled and minified CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <!-- jQuery library -->
@@ -23,8 +24,24 @@
 
             var verbTensesTableApp = angular.module('verbTensesTableApp', []);
 
-            verbTensesTableApp.controller('MainController', function MainController($scope) {
-                var irregularVerbs = {
+            /*
+            verbTensesTableApp.config( [ "$locationProvider", "$routeProvider",
+                function config( $locationProvider, $routeProvider ) {
+                    $locationProvider.hashPrefix('!');
+                    debugger;
+                    $routeProvider.
+                        when( "/:originalVerb", {
+                            templateUrl: "index.html",
+                            controller: "MainController"
+                        }).
+                        otherwise( "/play" );
+                }
+            ]);
+            */
+
+            verbTensesTableApp.controller('MainController', [ "$scope", 
+                function MainController( $scope ) {
+                    var irregularVerbs = {
                         //"abide": {  baseFrom: "abide", pastSimple: "abode/Abided", pastParticiple: "abode/Abided/Abidden" },
                         //"alight": {  baseFrom: "alight", pastSimple: "alit/Alighted", pastParticiple: "alit/Alighted" },
                         "arise": {  baseFrom: "arise", pastSimple: "arose", pastParticiple: "arisen" },
@@ -237,111 +254,110 @@
                         "wring": {  baseFrom: "wring", pastSimple: "wrung", pastParticiple: "wrung" },
                         "write": {  baseFrom: "write", pastSimple: "wrote", pastParticiple: "written" },
                         "zinc": {  baseFrom: "zinc", pastSimple: "zinced/Zincked", pastParticiple: "zinced/Zincked" }
-};
+                    };
 
-                function isIrregular ( verb ) {
-                    if ( irregularVerbs[verb] ) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                function isVowel ( c ) {
-                    var vowelLetters = "aeiou";
-                    return vowelLetters.indexOf( c ) > -1;
-                }
-
-                function isConsonant ( c ) {
-                    return !isVowel( c );
-                }
-
-                function getIrregularVerbByTense ( t1, vreb ) {
-                    return verb;
-                }
-
-                function getPerfectIrregularVerb ( verb ) {
-                    return verb;
-                }
-
-                function getEdFromOfVerb ( verb ) {
-                    if( isIrregular ( verb ) ) {
-                        return irregularVerbs[verb].pastSimple;
-                    } else if (verb.endsWith( "e" ) ) {
-                        return verb + "d";
-                    } else if ( verb.endsWith( "y" ) ) {
-                        if ( isVowel( verb.substr( -2, 1 ) ) ) {
-                            return verb + "ed";
+                    function isIrregular ( verb ) {
+                        if ( irregularVerbs[verb] ) {
+                            return true;
                         } else {
-                            return verb.substring( 0, verb.length - 1 ) + "ied";
+                            return false;
                         }
-                    } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                        if ( verb.endsWith( "x" ) ) {
-                            return verb + "ed";
-                        } else {
-                            return verb + verb.substr( -1, 1 ) + "ed";
-                        }
-                        
-                    } else {
-                        return verb + "ed";
                     }
-                }
 
-                function getIngFormOfVerb ( verb ) {
-                    if ( verb.endsWith( "ie" ) ) {
-                        return verb.substring( 0, verb.length - 2 ) + "ying";
-                    } else if  ( verb.endsWith( "ee" ) ) {
-                        return verb + "ing";
-                    } else if ( verb.endsWith( "e" ) ) {
-                        return verb.substring( 0, verb.length - 1 ) + "ing";
-                    } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                        if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
-                            return verb + "ing";
-                        } else {
-                            return verb + verb.substr( -1, 1 ) + "ing";
-                        }
-                    } else {
-                        return verb + "ing";
+                    function isVowel ( c ) {
+                        var vowelLetters = "aeiou";
+                        return vowelLetters.indexOf( c ) > -1;
                     }
-                }
 
+                    function isConsonant ( c ) {
+                        return !isVowel( c );
+                    }
 
-                function getVerbByTense ( t1, t2, verb ) {
-                    var verb = verb.toLowerCase();
+                    function getIrregularVerbByTense ( t1, vreb ) {
+                        return verb;
+                    }
 
-                    if ( t2 === "SIMPLE" ) {
-                        if ( t1 === "PAST" ) {
-                            console.log("PAST SIMPLE");
-                            return getEdFromOfVerb( verb );
+                    function getPerfectIrregularVerb ( verb ) {
+                        return verb;
+                    }
+
+                    function getEdFromOfVerb ( verb ) {
+                        if( isIrregular ( verb ) ) {
+                            return irregularVerbs[verb].pastSimple;
+                        } else if (verb.endsWith( "e" ) ) {
+                            return verb + "d";
+                        } else if ( verb.endsWith( "y" ) ) {
+                            if ( isVowel( verb.substr( -2, 1 ) ) ) {
+                                return verb + "ed";
+                            } else {
+                                return verb.substring( 0, verb.length - 1 ) + "ied";
+                            }
+                        } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
+                            if ( verb.endsWith( "x" ) ) {
+                                return verb + "ed";
+                            } else {
+                                return verb + verb.substr( -1, 1 ) + "ed";
+                            }
                             
-                        } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
-                            return verb;
+                        } else {
+                            return verb + "ed";
                         }
-                    } else if ( t2 === "CONTINUOUS" ) {
-                        if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
-                            console.log("* CONTINUOUS");
+                    }
+
+                    function getIngFormOfVerb ( verb ) {
+                        if ( verb.endsWith( "ie" ) ) {
+                            return verb.substring( 0, verb.length - 2 ) + "ying";
+                        } else if  ( verb.endsWith( "ee" ) ) {
+                            return verb + "ing";
+                        } else if ( verb.endsWith( "e" ) ) {
+                            return verb.substring( 0, verb.length - 1 ) + "ing";
+                        } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
+                            if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
+                                return verb + "ing";
+                            } else {
+                                return verb + verb.substr( -1, 1 ) + "ing";
+                            }
+                        } else {
+                            return verb + "ing";
+                        }
+                    }
+
+                    function getVerbByTense ( t1, t2, verb ) {
+                        var verb = verb.toLowerCase();
+
+                        if ( t2 === "SIMPLE" ) {
+                            if ( t1 === "PAST" ) {
+                                console.log("PAST SIMPLE");
+                                return getEdFromOfVerb( verb );
+                                
+                            } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
+                                return verb;
+                            }
+                        } else if ( t2 === "CONTINUOUS" ) {
+                            if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
+                                console.log("* CONTINUOUS");
+                                return getIngFormOfVerb( verb );
+                            }
+
+                        } else if ( t2 === "PERFECT" ) {
+                            console.log("* PERFECT");
+                            if( isIrregular ( verb ) ) {
+                                return irregularVerbs[verb].pastParticiple;
+                            } else {
+                                return getEdFromOfVerb( verb );
+                            }
+                        } else if ( t2 === "PERFECTCONTINUOUS" ) {
+                            console.log("* PERFECT CONTINUOUS");
                             return getIngFormOfVerb( verb );
                         }
-
-                    } else if ( t2 === "PERFECT" ) {
-                        console.log("* PERFECT");
-                        if( isIrregular ( verb ) ) {
-                            return irregularVerbs[verb].pastParticiple;
-                        } else {
-                            return getEdFromOfVerb( verb );
-                        }
-                    } else if ( t2 === "PERFECTCONTINUOUS" ) {
-                        console.log("* PERFECT CONTINUOUS");
-                        return getIngFormOfVerb( verb );
                     }
-                }
 
-                $scope.originalVerb = "play";
+                    $scope.originalVerb = "play";
 
-                $scope.getVerbByTense = function ( t1, t2, verb ) {
-                    return getVerbByTense( t1, t2, verb );
-                }
-            });
+                    $scope.getVerbByTense = function ( t1, t2, verb ) {
+                        return getVerbByTense( t1, t2, verb );
+                    }
+            }]);
             
         </script>
     </head>
@@ -420,7 +436,7 @@
                             <td>
                                 <div>I had been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</mark>.</div>
                                 <div>Had I been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</mark>?</div>
-                                <div>I had not been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</mark>?</div>
+                                <div>I had not been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</mark>.</div>
                             </td>
                             <td>
                                 <div>I have been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}</mark>.</div>
