@@ -15,8 +15,8 @@ verbTensesTableApp.config( [ "$locationProvider", "$routeProvider",
 ]);
 */
 
-verbTensesTableApp.controller('MainController', [
-    function MainController( ) {
+verbTensesTableApp.controller('MainController', [ "$scope",
+    function MainController( $scope ) {
         var verbInPictures = {
             "pack": "pictures/pack.png",
             "paint": "pictures/paint.png",
