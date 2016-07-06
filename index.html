@@ -4,7 +4,12 @@
         <title>VTT - Verb Tenses Table</title>
         <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <style>
             /*
             table {
@@ -334,92 +339,95 @@
         </script>
     </head>
     <body>
-        <div ng-controller="MainController">
-            <table class="table-hover">
-                <thead>
-                    <tr>
-                        <th><input id="originalVerb" ng-model="originalVerb" type="text"></th>
-                        <th>PAST</th>
-                        <th>PRESENT</th>
-                        <th>FUTURE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><b>SIMPLE</b></td>
-                        <td>
-                            <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}.</div>
-                            <div>Did I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
-                            <div>I did not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
-                            <div>Do I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
-                            <div>I do not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}.</div>
-                            <div>Will I {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}?</div>
-                            <div>I will not {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}.</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>CONTINUOUS</b></td>
-                        <td>
-                            <div>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}.</div>
-                            <div>Was I {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}?</div>
-                            <div>I was not {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}.</div>
-                            <div>Am I {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}?</div>
-                            <div>I am not {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}.</div>
-                            <div>Will I be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}?</div>
-                            <div>I will not be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}.</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>PERFECT</b></td>
-                        <td>
-                            <div>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}.</div>
-                            <div>Had I {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}?</div>
-                            <div>I had not {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I have {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}.</div>
-                            <div>Have I {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}?</div>
-                            <div>I have not {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I will have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}.<div>    
-                            <div>Will I have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}?<div>    
-                            <div>I will not have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}.<div>    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>PERFECT CONTINUOUS</b></td>
-                        <td>
-                            <div>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
-                            <div>Had I been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
-                            <div>I had not been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
-                        </td>
-                        <td>
-                            <div>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
-                            <div>Have I been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
-                            <div>I have not been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
-                        </td>
-                        <td>
-                            <div>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
-                            <div>Will I have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
-                            <div>I will not have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot></tfoot>
-            </table>
+        <div ng-controller="MainController" class="container">
+            <div class="page-header">VTT - Verb Tenses Table</div>
+            <p>
+                <table class="table-hover">
+                    <thead>
+                        <tr>
+                            <th><input id="originalVerb" ng-model="originalVerb" type="text"></th>
+                            <th>PAST</th>
+                            <th>PRESENT</th>
+                            <th>FUTURE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>SIMPLE</b></td>
+                            <td>
+                                <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}.</div>
+                                <div>Did I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
+                                <div>I did not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
+                                <div>Do I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
+                                <div>I do not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}.</div>
+                                <div>Will I {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}?</div>
+                                <div>I will not {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>CONTINUOUS</b></td>
+                            <td>
+                                <div>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}.</div>
+                                <div>Was I {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}?</div>
+                                <div>I was not {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}.</div>
+                                <div>Am I {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}?</div>
+                                <div>I am not {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}.</div>
+                                <div>Will I be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}?</div>
+                                <div>I will not be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>PERFECT</b></td>
+                            <td>
+                                <div>I had {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}.</div>
+                                <div>Had I {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}?</div>
+                                <div>I had not {{ getVerbByTense("PAST", "PERFECT", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I have {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}.</div>
+                                <div>Have I {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}?</div>
+                                <div>I have not {{ getVerbByTense("PRESENT", "PERFECT", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I will have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}.<div>    
+                                <div>Will I have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}?<div>    
+                                <div>I will not have {{ getVerbByTense("FUTURE", "PERFECT", originalVerb ) }}.<div>    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>PERFECT CONTINUOUS</b></td>
+                            <td>
+                                <div>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                                <div>Had I been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                                <div>I had not been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                            </td>
+                            <td>
+                                <div>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                                <div>Have I been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                                <div>I have not been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                            </td>
+                            <td>
+                                <div>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                                <div>Will I have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                                <div>I will not have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </p>
         </div>
     </body>
 </html>
