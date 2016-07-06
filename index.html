@@ -398,9 +398,21 @@
                     </tr>
                     <tr>
                         <td>PERFECT CONTINUOUS</td>
-                        <td>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}</td>
-                        <td>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}</td>
+                        <td>
+                            <div>I had been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                            <div>Had I been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                            <div>I had not been {{ getVerbByTense("PAST", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                        </td>
+                        <td>
+                            <div>I have been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                            <div>Have I been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                            <div>I have not been {{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                        </td>
+                        <td>
+                            <div>I will have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                            <div>Will I have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}?</div>
+                            <div>I will not have been {{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", originalVerb ) }}.</div>
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot></tfoot>
