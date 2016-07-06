@@ -264,7 +264,7 @@
                     return verb;
                 }
 
-                function getPastSimple ( verb ) {
+                function getEdFromOfVerb ( verb ) {
                     if( isIrregular ( verb ) ) {
                         return irregularVerbs[verb].pastSimple;
                     } else if (verb.endsWith( "e" ) ) {
@@ -287,13 +287,32 @@
                     }
                 }
 
+                function getIngFormOfVerb ( verb ) {
+                    if ( verb.endsWith( "ie" ) ) {
+                        return verb.substring( 0, verb.length - 2 ) + "ying";
+                    } else if  ( verb.endsWith( "ee" ) ) {
+                        return verb + "ing";
+                    } else if ( verb.endsWith( "e" ) ) {
+                        return verb.substring( 0, verb.length - 1 ) + "ing";
+                    } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
+                        if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
+                            return verb + "ing";
+                        } else {
+                            return verb + verb.substr( -1, 1 ) + "ing";
+                        }
+                    } else {
+                        return verb + "ing";
+                    }
+                }
+
+
                 function getVerbByTense ( t1, t2, verb ) {
                     var verb = verb.toLowerCase();
 
                     if ( t2 === "SIMPLE" ) {
                         if ( t1 === "PAST" ) {
                             console.log("PAST SIMPLE");
-                            return getPastSimple( verb );
+                            return getEdFromOfVerb( verb );
                             
                         } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
                             return verb;
@@ -301,22 +320,7 @@
                     } else if ( t2 === "CONTINUOUS" ) {
                         if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
                             console.log("* CONTINUOUS");
-
-                            if ( verb.endsWith( "ie" ) ) {
-                                return verb.substring( 0, verb.length - 2 ) + "ying";
-                            } else if  ( verb.endsWith( "ee" ) ) {
-                                return verb + "ing";
-                            } else if ( verb.endsWith( "e" ) ) {
-                                return verb.substring( 0, verb.length - 1 ) + "ing";
-                            } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                                if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
-                                    return verb + "ing";
-                                } else {
-                                    return verb + verb.substr( -1, 1 ) + "ing";
-                                }
-                            } else {
-                                return verb + "ing";
-                            }
+                            return getIngFormOfVerb( verb );
                         }
 
                     } else if ( t2 === "PERFECT" ) {
@@ -324,11 +328,11 @@
                         if( isIrregular ( verb ) ) {
                             return irregularVerbs[verb].pastParticiple;
                         } else {
-                            return getVerbByTense("PAST", "SIMPLE", verb );
+                            return getEdFromOfVerb( verb );
                         }
                     } else if ( t2 === "PERFECTCONTINUOUS" ) {
                         console.log("* PERFECT CONTINUOUS");
-                        return getVerbByTense("PRESENT", "CONTINUOUS", verb );
+                        return getIngFormOfVerb( verb );
                     }
                 }
 
