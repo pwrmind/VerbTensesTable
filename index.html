@@ -304,7 +304,7 @@
                             } else if ( verb.endsWith( "e" ) ) {
                                 return verb.substring( 0, verb.length - 1 ) + "ing";
                             } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                                if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) ) {
+                                if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
                                     return verb + "ing";
                                 } else {
                                     return verb + verb.substr( -1, 1 ) + "ing";
