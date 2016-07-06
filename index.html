@@ -276,7 +276,12 @@
                             return verb.substring( 0, verb.length - 1 ) + "ied";
                         }
                     } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                        return verb + verb.substr( -1, 1 ) + "ed";
+                        if ( verb.endsWith( "x" ) ) {
+                            return verb + "ed";
+                        } else {
+                            return verb + verb.substr( -1, 1 ) + "ed";
+                        }
+                        
                     } else {
                         return verb + "ed";
                     }
