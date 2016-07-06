@@ -347,12 +347,12 @@
                         <td>
                             <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}.</div>
                             <div>Did I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
-                            <div>I did not{{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
+                            <div>I did not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
                         </td>
                         <td>
-                            <div>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.<div>
-                            <div>Do I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?<div>
-                            <div>I do not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.<div>
+                            <div>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
+                            <div>Do I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
+                            <div>I do not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
                         </td>
                         <td>
                             <div>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}</div>
@@ -362,9 +362,21 @@
                     </tr>
                     <tr>
                         <td>CONTINUOUS</td>
-                        <td>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}</td>
-                        <td>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}</td>
-                        <td>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}</td>
+                        <td>
+                            <div>I was {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}</div>
+                            <div>Was I {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}?</div>
+                            <div>I was not {{ getVerbByTense("PAST", "CONTINUOUS", originalVerb ) }}?</div>
+                        </td>
+                        <td>
+                            <div>I am {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}</div>
+                            <div>Am I {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}?</div>
+                            <div>I am not {{ getVerbByTense("PRESENT", "CONTINUOUS", originalVerb ) }}.</div>
+                        </td>
+                        <td>
+                            <div>I will be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}</div>
+                            <div>Will I be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}?</div>
+                            <div>I will not be {{ getVerbByTense("FUTURE", "CONTINUOUS", originalVerb ) }}</div>
+                        </td>
                     </tr>
                     <tr>
                         <td>PERFECT</td>
