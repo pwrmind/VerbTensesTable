@@ -345,10 +345,20 @@
                     <tr>
                         <td>SIMPLE</td>
                         <td>
-                            <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}</div>
+                            <div>I {{ getVerbByTense("PAST", "SIMPLE", originalVerb ) }}.</div>
+                            <div>Did I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?</div>
+                            <div>I did not{{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.</div>
                         </td>
-                        <td>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}</td>
-                        <td>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}</td>
+                        <td>
+                            <div>I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.<div>
+                            <div>Do I {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}?<div>
+                            <div>I do not {{ getVerbByTense("PRESENT", "SIMPLE", originalVerb ) }}.<div>
+                        </td>
+                        <td>
+                            <div>I will {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}</div>
+                            <div>Will I {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}?</div>
+                            <div>I will not {{ getVerbByTense("FUTURE", "SIMPLE", originalVerb ) }}.</div>
+                        </td>
                     </tr>
                     <tr>
                         <td>CONTINUOUS</td>
