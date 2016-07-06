@@ -366,6 +366,7 @@
                     }
 
                     $scope.getPictureByVerb = function ( verb ) {
+                        var verb = verb.toLowerCase();
                         return verbInPictures[verb];
                     }
 
