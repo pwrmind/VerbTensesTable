@@ -312,33 +312,41 @@ verbTensesTableApp.controller('MainController', [ "$scope",
             }
         }
 
-        function getVerbByTense ( t1, t2, verb ) {
+        function getVerbByTense ( t1, t2, voice, verb ) {
             var verb = verb.toLowerCase();
 
-            if ( t2 === "SIMPLE" ) {
-                if ( t1 === "PAST" ) {
-                    console.log("PAST SIMPLE");
-                    return getEdFromOfVerb( verb );
-                    
-                } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
-                    return verb;
-                }
-            } else if ( t2 === "CONTINUOUS" ) {
-                if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
-                    console.log("* CONTINUOUS");
-                    return getIngFormOfVerb( verb );
-                }
-
-            } else if ( t2 === "PERFECT" ) {
-                console.log("* PERFECT");
+            if ( voice === "PASSIVE" ) {
                 if( isIrregular ( verb ) ) {
                     return irregularVerbs[verb].pastParticiple;
                 } else {
                     return getEdFromOfVerb( verb );
                 }
-            } else if ( t2 === "PERFECTCONTINUOUS" ) {
-                console.log("* PERFECT CONTINUOUS");
-                return getIngFormOfVerb( verb );
+            } else if ( voice === "ACTIVE" ) {
+                if ( t2 === "SIMPLE" ) {
+                    if ( t1 === "PAST" ) {
+                        console.log("PAST SIMPLE");
+                        return getEdFromOfVerb( verb );
+                        
+                    } else if ( t1 === "PRESENT" || t1 === "FUTURE" ) {
+                        return verb;
+                    }
+                } else if ( t2 === "CONTINUOUS" ) {
+                    if ( t1 === "PAST" || t1 === "PRESENT" || t1 === "FUTURE" ) {
+                        console.log("* CONTINUOUS");
+                        return getIngFormOfVerb( verb );
+                    }
+
+                } else if ( t2 === "PERFECT" ) {
+                    console.log("* PERFECT");
+                    if( isIrregular ( verb ) ) {
+                        return irregularVerbs[verb].pastParticiple;
+                    } else {
+                        return getEdFromOfVerb( verb );
+                    }
+                } else if ( t2 === "PERFECTCONTINUOUS" ) {
+                    console.log("* PERFECT CONTINUOUS");
+                    return getIngFormOfVerb( verb );
+                }
             }
         }
 
@@ -349,7 +357,7 @@ verbTensesTableApp.controller('MainController', [ "$scope",
 
         $scope.originalVerb = "pack";
 
-        $scope.getVerbByTense = function ( t1, t2, verb ) {
-            return getVerbByTense( t1, t2, verb );
+        $scope.getVerbByTense = function ( t1, t2, voice, verb ) {
+            return getVerbByTense( t1, t2, voice, verb );
         }
 }]);
