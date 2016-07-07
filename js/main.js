@@ -283,7 +283,7 @@ verbTensesTableApp.controller('MainController', [ "$scope",
                     return verb.substring( 0, verb.length - 1 ) + "ied";
                 }
             } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                if ( verb.endsWith( "x" ) ) {
+                if ( verb.endsWith( "x" ) || verb.endsWith( "w" ) || verb.endsWith( "v" ) || verb.endsWith( "y" ) ) {
                     return verb + "ed";
                 } else {
                     return verb + verb.substr( -1, 1 ) + "ed";
@@ -302,7 +302,7 @@ verbTensesTableApp.controller('MainController', [ "$scope",
             } else if ( verb.endsWith( "e" ) ) {
                 return verb.substring( 0, verb.length - 1 ) + "ing";
             } else if ( isConsonant( verb.substr( -3, 1 ) ) && isVowel( verb.substr( -2, 1 ) ) && isConsonant( verb.substr( -1, 1 ) ) ) {
-                if ( verb.endsWith( "y" ) || verb.endsWith( "w" ) || verb.endsWith( "x" ) ) {
+                if ( verb.endsWith( "x" ) || verb.endsWith( "w" ) || verb.endsWith( "y" ) ) {
                     return verb + "ing";
                 } else {
                     return verb + verb.substr( -1, 1 ) + "ing";
