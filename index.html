@@ -1,296 +1,136 @@
 <!DOCTYPE html>
-<html lang="ru" ng-app="VTT">
+<html lang="ru" ng-app="verbTensesTableApp">
     <head>
         <title>VTT - Verb Tenses Table</title>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-        <style>
-            .menu-item {
-            float: left;
-            }
+        <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        
+        <script src="js/main.js"></script>
+        <link href="css/main.css" rel="stylesheet">
+        <!-- Put this script tag to the <head> of your page -->
+        <script type="text/javascript" src="//vk.com/js/api/openapi.js?136"></script>
 
-            table{
-                    width: 100%;
-                }
-
-            th, td {
-                text-align: center;
-            }
-        </style>
-        <script>
-            function scrollTo(minuItem) {
-            //debugger;
-            location.hash = "#" + minuItem.id;
-            }
+        <script type="text/javascript">
+        VK.init({apiId: API_ID, onlyWidgets: true});
         </script>
     </head>
     <body>
-        <script>
-            angular.module('VTT', [])
-            .controller('VerbTensesTable', ['$scope', function($scope) {
-            $scope.verb = {
-                original: "play"
-            }
-            
-            $scope.getPastSimple = function (v) {
-                var irregularVerbs = {
-                    "write": "wrote",
-                    "see": "saw",
-                    "do": "did",
-                    "go": "went",
-                    "grow": "grew",
-                    "know": "knew",
-                    "think": "thought",
-                    "sleep": "slept",
-                    "eat": "ate"
-                }
-            
-                if(irregularVerbs[v] != undefined )
-                {
-                    return irregularVerbs[v];
-                } else {
-                    return v + "ed";
-                }
-            }
-            
-            $scope.getPresentSimple = function (v) {
-                return v;
-            }
-            
-            $scope.getFutureSimple = function (v) {
-                return v;
-            }
-            
-            $scope.getPresentContinuous = function (v) {
-                return v + "ing";
-            }
-            
-            $scope.getFutureContinuous = function (v) {
-                return "will be " + v + "ing";
-            }
-            
-            $scope.getPastContinuous = function (v) {
-                return "was " + v + "ing";
-            }
-            
-            $scope.getPastPerfect = function (v) {
-                return "had " + $scope.getPastSimple( v );
-            }
-            
-            $scope.getPresentPerfect = function (v) {
-                return "have " + $scope.getPastSimple( v );
-            }
-            
-            $scope.getFuturePerfect = function (v) {
-                return "will have " + $scope.getPastSimple( v );
-            }
-            
-            $scope.getPastPerfectContinuous = function (v) {
-                return "had been " + $scope.getPresentContinuous( v );
-            }
-            
-            $scope.getPresentPerfectContinuous = function (v) {
-                return "have been " + $scope.getPresentContinuous( v );
-            }
-            
-            $scope.getFuturePerfectContinuous = function (v) {
-                return "will have been " + $scope.getPresentContinuous( v );
-            }
-            
-            }]);
-            
-        </script>
-        <div ng-controller="VerbTensesTable">
-            <table>
-                <tr>
-                    <th><input id="verb" ng-model="verb.original" type="text"></th>
-                    <th>Past</th>
-                    <th>Present</th>
-                    <th>Future</th>
-                </tr>
-                <tr>
-                    <td>Simple</td>
-                    <td>
-                        <table>
-                                <tr>
-                                        <td>
-                                                <div>I {{getPastSimple(verb.original)}}.</div>
-                                                <div>I did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did I {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>You {{getPastSimple(verb.original)}}.</div>
-                                                <div>You did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did you {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>We {{getPastSimple(verb.original)}}.</div>
-                                                <div>We did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did we {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>They {{getPastSimple(verb.original)}}.</div>
-                                                <div>They did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did they {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>He {{getPastSimple(verb.original)}}.</div>
-                                                <div>He did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did he {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>She {{getPastSimple(verb.original)}}.</div>
-                                                <div>She did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Did she {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>It {{getPastSimple(verb.original)}}.</div>
-                                                <div>It did not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>It she {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <table>
-                                <tr>
-                                        <td>
-                                                <div>I {{getPresentSimple(verb.original)}}.</div>
-                                                <div>I will not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Do I {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>You {{getPresentSimple(verb.original)}}.</div>
-                                                <div>You will not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Do you {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>We {{getPresentSimple(verb.original)}}.</div>
-                                                <div>We will not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Do we {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>They {{getPresentSimple(verb.original)}}.</div>
-                                                <div>They will not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Do they {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>He {{getPresentSimple(verb.original)}}.</div>
-                                                <div>He does not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Does he {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>She {{getPresentSimple(verb.original)}}.</div>
-                                                <div>She does not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Does she {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>It {{getPresentSimple(verb.original)}}.</div>
-                                                <div>It does not {{getPresentSimple(verb.original)}}.</div>
-                                                <div>Does it {{getPresentSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <table>
-                                <tr>
-                                        <td>
-                                                <div>I will {{getFutureSimple(verb.original)}}.</div>
-                                                <div>I will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will I {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>You {{getFutureSimple(verb.original)}}.</div>
-                                                <div>You will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will you {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>We {{getFutureSimple(verb.original)}}.</div>
-                                                <div>We will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will we {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>They {{getFutureSimple(verb.original)}}.</div>
-                                                <div>They will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will they {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>He {{getFutureSimple(verb.original)}}.</div>
-                                                <div>He will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will he {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>She {{getFutureSimple(verb.original)}}.</div>
-                                                <div>She will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will she {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                                <div>It {{getFutureSimple(verb.original)}}.</div>
-                                                <div>It will not {{getFutureSimple(verb.original)}}.</div>
-                                                <div>Will it {{getFutureSimple(verb.original)}}?</div>
-                                        </td>
-                                </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Continuous</td>
-                    <td>I {{getPastContinuous(verb.original)}}.</td>
-                    <td>I am {{getPresentContinuous(verb.original)}}.</td>
-                    <td>I {{getFutureContinuous(verb.original)}}.</td>
-                </tr>
-                <tr>
-                    <td>Perfect</td>
-                    <td>I {{getPastPerfect(verb.original)}}.</td>
-                    <td>I {{getPresentPerfect(verb.original)}}.</td>
-                    <td>I {{getFuturePerfect(verb.original)}}.</td>
-                </tr>
-                <tr>
-                    <td>Perfect continuous</td>
-                    <td>I {{getPastPerfectContinuous(verb.original)}}.</td>
-                    <td>I {{getPresentPerfectContinuous(verb.original)}}.</td>
-                    <td>I {{getFuturePerfectContinuous(verb.original)}}.</td>
-                </tr>
-            </table>
-        </div>
-        <div class="workspace">
+        <div ng-controller="MainController" class="container">
+            <div class="page-header">
+                <h1>VTT - Verb Tenses Table</h1>
+                <!-- Put this div tag to the place, where the Like block will be -->
+                <div id="vk_like"></div>
+                <script type="text/javascript">
+                VK.Widgets.Like("vk_like", {type: "vertical", height: 24});
+                </script>
+            </div>
+            <p>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><input id="originalVerb" ng-model="originalVerb" type="text"></th>
+                            <th>PAST</th>
+                            <th>PRESENT</th>
+                            <th>FUTURE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>SIMPLE</b></td>
+                            <td>
+                                <div>I <mark>{{ getVerbByTense("PAST", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Did I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I did not <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It was <mark>{{ getVerbByTense("PAST", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Do I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I do not <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It is <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I will <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Will I <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I will not <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It will be <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>CONTINUOUS</b></td>
+                            <td>
+                                <div>I was <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Was I <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I was not <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It was being <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I am <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Am I <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I am not <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It is being <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I will be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Will I be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I will not be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>PERFECT</b></td>
+                            <td>
+                                <div>I had <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Had I <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I had not <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It had been <mark>{{ getVerbByTense("PAST", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I have <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Have I <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I have not <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It has been <mark>{{ getVerbByTense("PRESENT", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I will have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>    
+                                <div>Will I have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>    
+                                <div>I will not have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It will have been <mark>{{ getVerbByTense("FUTURE", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>PERFECT CONTINUOUS</b></td>
+                            <td>
+                                <div>I had been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Had I been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I had not been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It had been being <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I have been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Have I been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I have not been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>It has been being <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
+                            </td>
+                            <td>
+                                <div>I will have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                                <div>Will I have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
+                                <div>I will not have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </p>
+            <p>
+                <img ng-if="getPictureByVerb( originalVerb )" ng-src="{{ getPictureByVerb( originalVerb ) }}" alt="{{ originalVerb }}" />
+            </p>
         </div>
     </body>
 </html>
