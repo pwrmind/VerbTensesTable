@@ -148,6 +148,54 @@
             background-color: #4f46e5;
             color: white;
         }
+        
+        .training-log {
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        
+        .dark-mode .training-log {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dark-mode .log-entry {
+            border-bottom-color: #444;
+        }
+        
+        .log-success {
+            color: #198754;
+        }
+        
+        .log-error {
+            color: #dc3545;
+        }
+        
+        .log-info {
+            color: #0d6efd;
+        }
+        
+        .dark-mode .log-success {
+            color: #75b798;
+        }
+        
+        .dark-mode .log-error {
+            color: #e68585;
+        }
+        
+        .dark-mode .log-info {
+            color: #8b85f2;
+        }
     </style>
 </head>
 <body>
@@ -336,17 +384,6 @@
             
             <!-- Боковая панель -->
             <div class="col-lg-4">
-                <!-- Карточка с визуализацией -->
-                <div class="verb-card p-3 mb-3">
-                    <h5 class="mb-2">
-                        <i class="fas fa-chart-line text-primary me-2"></i>Usage Frequency
-                    </h5>
-                    <div class="chart-container" id="usageChart"></div>
-                    <div class="mt-2 text-center">
-                        <small class="text-muted">Frequency of different tense forms for "<span x-text="originalVerb" class="fw-bold"></span>"</small>
-                    </div>
-                </div>
-                
                 <!-- Неправильные глаголы -->
                 <div class="verb-card p-3 mb-3">
                     <h5 class="mb-2">
@@ -385,24 +422,78 @@
                     <h5 class="mb-2">
                         <i class="fas fa-robot text-success me-2"></i>AI Prediction
                     </h5>
-                    <div class="mb-2">
+                    
+                    <!-- Индикатор обучения -->
+                    <div x-show="isTraining" class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="small">Prediction confidence:</span>
-                            <span class="badge" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'"
-                                  x-text="aiConfidence + '%'"></span>
+                            <span class="small">Training progress:</span>
+                            <span class="badge bg-info" x-text="trainingProgress + '%'"></span>
                         </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'" 
-                                 :style="'width: ' + aiConfidence + '%'"></div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                                 :style="'width: ' + trainingProgress + '%'"></div>
+                        </div>
+                        <div class="mt-1 text-center small">
+                            <span x-text="trainingStatus"></span>
+                        </div>
+                        
+                        <!-- Лог обучения -->
+                        <div class="training-log mt-2" x-show="trainingLog.length > 0">
+                            <div class="log-entry" x-for="log in trainingLog" :key="log.id">
+                                <span :class="'log-' + log.type" x-text="log.message"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="alert alert-info small mb-2">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <span x-text="aiPrediction"></span>
+                    
+                    <!-- Результаты предсказания -->
+                    <div x-show="!isTraining">
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small">Prediction confidence:</span>
+                                <span class="badge" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'"
+                                      x-text="aiConfidence + '%'"></span>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'" 
+                                     :style="'width: ' + aiConfidence + '%'"></div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info small mb-2">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            <span x-text="aiPrediction"></span>
+                        </div>
                     </div>
-                    <button class="btn btn-sm btn-success w-100" @click="trainModel()">
-                        <i class="fas fa-brain me-1"></i>Train AI Model
-                    </button>
+                    
+                    <!-- Кнопки управления -->
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-success flex-grow-1" 
+                                @click="trainModel()"
+                                :disabled="isTraining">
+                            <i class="fas fa-brain me-1"></i>
+                            <span x-text="isTraining ? 'Training...' : 'Train AI Model'"></span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" 
+                                @click="predictWithAI()"
+                                :disabled="isTraining || !brainModel">
+                            <i class="fas fa-robot"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Статистика модели -->
+                    <div class="mt-2 small text-muted" x-show="modelStats.trained">
+                        <div class="d-flex justify-content-between">
+                            <span>Model trained on:</span>
+                            <span x-text="modelStats.trainingDate"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Accuracy:</span>
+                            <span x-text="modelStats.accuracy + '%'"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Verbs learned:</span>
+                            <span x-text="modelStats.verbsLearned"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -434,15 +525,24 @@
                 commonVerbs: ['walk', 'see', 'go', 'have', 'do', 'make', 'take', 'come', 'know', 'get'],
                 irregularVerbsList: [],
                 showAllIrregularVerbs: false,
-                aiPrediction: 'The AI will predict verb forms based on patterns.',
+                aiPrediction: 'Click "Train AI Model" to train the neural network on irregular verbs.',
                 aiConfidence: 0,
                 darkMode: false,
+                isTraining: false,
+                trainingProgress: 0,
+                trainingStatus: '',
+                trainingLog: [],
+                modelStats: {
+                    trained: false,
+                    trainingDate: '',
+                    accuracy: 0,
+                    verbsLearned: 0
+                },
                 
                 // Инициализация
                 init() {
                     this.updateVerb(this.originalVerb);
                     this.initializeIrregularVerbs();
-                    this.initializeChart();
                     this.initializeBrainModel();
                 },
                 
@@ -451,11 +551,13 @@
                     if (!verb) return;
                     this.originalVerb = verb.toLowerCase();
                     this.updateVerbStats();
-                    this.updateChart();
-                    this.predictWithAI();
+                    // Автоматически делаем предсказание, если модель обучена
+                    if (this.brainModel && this.modelStats.trained) {
+                        this.predictCurrentVerb();
+                    }
                 },
                 
-                // База данных неправильных глаголов (сокращенная версия из исходного кода)
+                // База данных неправильных глаголов
                 irregularVerbs: {
                     "arise": { baseForm: "arise", pastSimple: "arose", pastParticiple: "arisen" },
                     "awake": { baseForm: "awake", pastSimple: "awoke", pastParticiple: "awoken" },
@@ -661,90 +763,21 @@
                     this.irregularVerbsList = Object.values(this.irregularVerbs);
                 },
                 
-                // Инициализация графика D3.js
-                initializeChart() {
-                    setTimeout(() => {
-                        this.updateChart();
-                    }, 100);
-                },
-                
-                // Обновление графика
-                updateChart() {
-                    const data = [
-                        { tense: 'Simple', value: 30 + Math.random() * 40 },
-                        { tense: 'Continuous', value: 20 + Math.random() * 30 },
-                        { tense: 'Perfect', value: 15 + Math.random() * 25 },
-                        { tense: 'Perfect Cont.', value: 5 + Math.random() * 20 }
-                    ];
+                // Добавление записи в лог
+                addLog(message, type = 'info') {
+                    const logEntry = {
+                        id: Date.now() + Math.random(),
+                        message: message,
+                        type: type,
+                        timestamp: new Date().toLocaleTimeString()
+                    };
                     
-                    const container = document.getElementById('usageChart');
-                    if (!container) return;
+                    this.trainingLog.unshift(logEntry);
                     
-                    container.innerHTML = '';
-                    
-                    const width = container.clientWidth;
-                    const height = container.clientHeight;
-                    
-                    const svg = d3.select("#usageChart")
-                        .append("svg")
-                        .attr("width", width)
-                        .attr("height", height);
-                    
-                    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
-                    const chartWidth = width - margin.left - margin.right;
-                    const chartHeight = height - margin.top - margin.bottom;
-                    
-                    const x = d3.scaleBand()
-                        .domain(data.map(d => d.tense))
-                        .range([margin.left, margin.left + chartWidth])
-                        .padding(0.2);
-                    
-                    const y = d3.scaleLinear()
-                        .domain([0, 100])
-                        .nice()
-                        .range([margin.top + chartHeight, margin.top]);
-                    
-                    // Добавить столбцы
-                    svg.selectAll("rect")
-                        .data(data)
-                        .enter()
-                        .append("rect")
-                        .attr("x", d => x(d.tense))
-                        .attr("y", d => y(d.value))
-                        .attr("width", x.bandwidth())
-                        .attr("height", d => margin.top + chartHeight - y(d.value))
-                        .attr("fill", "#4f46e5")
-                        .attr("rx", 3);
-                    
-                    // Добавить значения
-                    svg.selectAll(".value-label")
-                        .data(data)
-                        .enter()
-                        .append("text")
-                        .attr("class", "value-label")
-                        .text(d => Math.round(d.value) + "%")
-                        .attr("x", d => x(d.tense) + x.bandwidth() / 2)
-                        .attr("y", d => y(d.value) - 5)
-                        .attr("text-anchor", "middle")
-                        .attr("font-size", "10px")
-                        .attr("fill", this.darkMode ? "#f0f0f0" : "#333")
-                        .attr("font-weight", "bold");
-                    
-                    // Добавить ось X
-                    svg.append("g")
-                        .attr("transform", `translate(0,${margin.top + chartHeight})`)
-                        .call(d3.axisBottom(x))
-                        .selectAll("text")
-                        .attr("font-size", "9px")
-                        .attr("fill", this.darkMode ? "#f0f0f0" : "#666");
-                    
-                    // Добавить ось Y
-                    svg.append("g")
-                        .attr("transform", `translate(${margin.left},0)`)
-                        .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + "%"))
-                        .selectAll("text")
-                        .attr("font-size", "9px")
-                        .attr("fill", this.darkMode ? "#f0f0f0" : "#666");
+                    // Ограничиваем количество записей в логе
+                    if (this.trainingLog.length > 10) {
+                        this.trainingLog = this.trainingLog.slice(0, 10);
+                    }
                 },
                 
                 // Инициализация модели Brain.js
@@ -752,53 +785,64 @@
                     if (typeof brain !== 'undefined') {
                         this.brainModel = new brain.NeuralNetwork({
                             activation: 'sigmoid',
-                            hiddenLayers: [12, 8],
+                            hiddenLayers: [6, 4], // Упрощенная архитектура для быстрого обучения
                             learningRate: 0.3
                         });
-                        console.log('AI Model initialized');
+                        this.addLog('AI model initialized', 'success');
                     } else {
                         console.warn('Brain.js not loaded');
-                        this.aiPrediction = "Brain.js library not loaded. Check your internet connection.";
+                        this.addLog('Brain.js library not loaded. Check your internet connection.', 'error');
                     }
                 },
                 
-                // Обучение модели на основе данных irregularVerbs
-                trainModel() {
+                // Обучение модели на основе данных irregularVerbs (асинхронное с визуализацией)
+                async trainModel() {
                     if (!this.brainModel) {
                         this.initializeBrainModel();
                     }
                     
+                    this.isTraining = true;
+                    this.trainingProgress = 0;
+                    this.trainingStatus = 'Preparing training data...';
+                    this.trainingLog = [];
+                    
                     try {
-                        // Создаем тренировочные данные на основе irregularVerbs
-                        const trainingData = [];
+                        // 1. Подготовка данных
+                        this.addLog('Preparing training dataset...', 'info');
+                        await this.delay(100); // Даем интерфейсу обновиться
                         
-                        // 1. Собираем все неправильные глаголы из нашей базы
+                        // Собираем все неправильные глаголы из нашей базы
                         const irregularVerbs = Object.keys(this.irregularVerbs);
                         
-                        // 2. Создаем список правильных глаголов для контраста
+                        // Создаем список правильных глаголов для контраста
                         const regularVerbs = [
                             'walk', 'talk', 'work', 'help', 'play', 'look', 'clean', 'open',
                             'start', 'ask', 'answer', 'listen', 'watch', 'rain', 'snow',
                             'dance', 'jump', 'cry', 'smile', 'laugh', 'study', 'wait', 'stay',
                             'move', 'change', 'arrive', 'live', 'die', 'happen', 'remember',
                             'forget', 'stop', 'continue', 'try', 'need', 'want', 'like',
-                            'love', 'hate', 'prefer', 'hope', 'plan', 'decide', 'offer',
-                            'promise', 'expect', 'seem', 'appear', 'believe'
+                            'love', 'hate', 'prefer', 'hope', 'plan', 'decide', 'offer'
                         ];
                         
-                        // 3. Фильтруем правильные глаголы, чтобы убрать те, которые есть в irregularVerbs
+                        // Фильтруем правильные глаголы, чтобы убрать те, которые есть в irregularVerbs
                         const filteredRegularVerbs = regularVerbs.filter(verb => 
                             !irregularVerbs.includes(verb)
                         );
                         
-                        // 4. Создаем сбалансированный набор данных
-                        // Используем все неправильные глаголы и такое же количество случайных правильных
-                        const numSamples = Math.min(irregularVerbs.length, filteredRegularVerbs.length);
+                        // Создаем сбалансированный набор данных
+                        const numSamples = Math.min(irregularVerbs.length, filteredRegularVerbs.length, 30); // Ограничиваем для скорости
                         const selectedRegularVerbs = this.shuffleArray(filteredRegularVerbs).slice(0, numSamples);
                         
-                        console.log(`Training with ${irregularVerbs.length} irregular verbs and ${selectedRegularVerbs.length} regular verbs`);
+                        this.addLog(`Using ${irregularVerbs.length} irregular and ${selectedRegularVerbs.length} regular verbs`, 'info');
                         
-                        // 5. Добавляем неправильные глаголы
+                        // 2. Создаем тренировочные данные
+                        this.trainingStatus = 'Creating training data...';
+                        this.trainingProgress = 10;
+                        await this.delay(100);
+                        
+                        const trainingData = [];
+                        
+                        // Добавляем неправильные глаголы
                         irregularVerbs.forEach(verb => {
                             trainingData.push({
                                 input: this.textToVector(verb),
@@ -806,7 +850,7 @@
                             });
                         });
                         
-                        // 6. Добавляем правильные глаголы
+                        // Добавляем правильные глаголы
                         selectedRegularVerbs.forEach(verb => {
                             trainingData.push({
                                 input: this.textToVector(verb),
@@ -814,36 +858,86 @@
                             });
                         });
                         
-                        // 7. Перемешиваем данные для лучшего обучения
+                        // Перемешиваем данные для лучшего обучения
                         const shuffledData = this.shuffleArray(trainingData);
                         
-                        // 8. Обучаем модель
-                        const startTime = Date.now();
-                        const result = this.brainModel.train(shuffledData, {
-                            iterations: 3000,
-                            errorThresh: 0.003,
-                            log: true,
-                            logPeriod: 300,
-                            learningRate: 0.3
-                        });
-                        const trainingTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                        this.addLog(`Training dataset created: ${shuffledData.length} samples`, 'success');
                         
-                        // 9. Сохраняем обученную модель для последующего использования
+                        // 3. Асинхронное обучение с визуализацией прогресса
+                        this.trainingStatus = 'Training neural network...';
+                        this.trainingProgress = 20;
+                        
+                        // Разбиваем обучение на небольшие пакеты для отображения прогресса
+                        const totalIterations = 1000; // Уменьшили для скорости
+                        const batchSize = 100;
+                        const numBatches = totalIterations / batchSize;
+                        
+                        let currentError = 1;
+                        
+                        for (let batch = 0; batch < numBatches; batch++) {
+                            this.trainingStatus = `Training batch ${batch + 1}/${numBatches}...`;
+                            
+                            const result = this.brainModel.train(shuffledData, {
+                                iterations: batchSize,
+                                errorThresh: 0.005,
+                                log: false,
+                                learningRate: 0.3
+                            });
+                            
+                            currentError = result.error;
+                            this.trainingProgress = 20 + ((batch + 1) / numBatches) * 70;
+                            
+                            this.addLog(`Batch ${batch + 1}: error = ${currentError.toFixed(4)}`, 'info');
+                            
+                            // Даем браузеру обновиться
+                            await this.delay(50);
+                        }
+                        
+                        // 4. Сохранение результатов
+                        this.trainingStatus = 'Testing model accuracy...';
+                        this.trainingProgress = 95;
+                        await this.delay(100);
+                        
+                        // Тестируем модель
+                        const testResults = this.testTrainedModel();
+                        const accuracy = testResults.accuracy;
+                        
+                        // Сохраняем обученную модель
                         this.trainedModelData = this.brainModel.toJSON();
                         
-                        // 10. Обновляем UI
-                        const accuracy = Math.round((1 - result.error) * 100);
-                        this.aiPrediction = `AI model trained successfully! ${irregularVerbs.length} irregular verbs learned. Accuracy: ${accuracy}% (${trainingTime}s)`;
-                        this.aiConfidence = accuracy;
+                        // Обновляем статистику модели
+                        this.modelStats = {
+                            trained: true,
+                            trainingDate: new Date().toLocaleDateString(),
+                            accuracy: accuracy,
+                            verbsLearned: irregularVerbs.length + selectedRegularVerbs.length
+                        };
                         
-                        // 11. Тестируем модель на нескольких примерах
-                        this.testTrainedModel();
+                        // 5. Завершение обучения
+                        this.trainingStatus = 'Training completed!';
+                        this.trainingProgress = 100;
+                        await this.delay(200);
+                        
+                        this.addLog(`Training completed! Accuracy: ${accuracy}%`, 'success');
+                        
+                        // Делаем предсказание для текущего глагола
+                        this.predictCurrentVerb();
+                        
+                        // Завершаем обучение
+                        await this.delay(500);
+                        this.isTraining = false;
                         
                     } catch (error) {
                         console.error('Training error:', error);
-                        this.aiPrediction = `Training failed: ${error.message}`;
-                        this.aiConfidence = 0;
+                        this.addLog(`Training failed: ${error.message}`, 'error');
+                        this.isTraining = false;
+                        this.trainingProgress = 0;
                     }
+                },
+                
+                // Вспомогательная функция для задержки
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
                 },
                 
                 // Вспомогательная функция для перемешивания массива
@@ -858,7 +952,7 @@
                 
                 // Тестирование обученной модели
                 testTrainedModel() {
-                    if (!this.brainModel) return;
+                    if (!this.brainModel) return { accuracy: 0, results: [] };
                     
                     const testVerbs = [
                         // Неправильные для проверки
@@ -877,7 +971,7 @@
                     ];
                     
                     let correct = 0;
-                    const testResults = [];
+                    const results = [];
                     
                     testVerbs.forEach(test => {
                         const prediction = this.brainModel.run(this.textToVector(test.verb));
@@ -888,7 +982,7 @@
                         const isCorrect = predictedType === test.expected;
                         if (isCorrect) correct++;
                         
-                        testResults.push({
+                        results.push({
                             verb: test.verb,
                             expected: test.expected,
                             predicted: predictedType,
@@ -898,15 +992,20 @@
                     });
                     
                     const accuracy = Math.round((correct / testVerbs.length) * 100);
-                    console.log(`Test accuracy: ${accuracy}%`, testResults);
                     
-                    // Обновляем предсказание для текущего глагола
-                    this.predictCurrentVerb();
+                    return {
+                        accuracy: accuracy,
+                        results: results
+                    };
                 },
                 
                 // Предсказание для текущего выбранного глагола
                 predictCurrentVerb() {
-                    if (!this.brainModel) return;
+                    if (!this.brainModel || !this.modelStats.trained) {
+                        this.aiPrediction = 'Model not trained yet. Click "Train AI Model" to start training.';
+                        this.aiConfidence = 0;
+                        return;
+                    }
                     
                     try {
                         const prediction = this.brainModel.run(this.textToVector(this.originalVerb));
@@ -918,16 +1017,16 @@
                         if (isIrregular) {
                             if (this.isIrregular(this.originalVerb)) {
                                 const irregular = this.irregularVerbs[this.originalVerb];
-                                this.aiPrediction = `AI correctly identifies "${this.originalVerb}" as IRREGULAR (confidence: ${confidence}%). Past: ${irregular.pastSimple}, Participle: ${irregular.pastParticiple}`;
+                                this.aiPrediction = `AI identifies "${this.originalVerb}" as IRREGULAR (${confidence}% confidence). Past: ${irregular.pastSimple}, Participle: ${irregular.pastParticiple}`;
                             } else {
-                                this.aiPrediction = `AI predicts "${this.originalVerb}" might be IRREGULAR (confidence: ${confidence}%), but it's not in our database.`;
+                                this.aiPrediction = `AI predicts "${this.originalVerb}" might be IRREGULAR (${confidence}% confidence), but it's not in our database.`;
                             }
                         } else {
                             if (this.isIrregular(this.originalVerb)) {
                                 const irregular = this.irregularVerbs[this.originalVerb];
-                                this.aiPrediction = `AI incorrectly predicts "${this.originalVerb}" as REGULAR (confidence: ${confidence}%). Actually irregular: Past: ${irregular.pastSimple}`;
+                                this.aiPrediction = `AI incorrectly predicts "${this.originalVerb}" as REGULAR (${confidence}% confidence). Actually irregular: Past: ${irregular.pastSimple}`;
                             } else {
-                                this.aiPrediction = `AI correctly predicts "${this.originalVerb}" as REGULAR (confidence: ${confidence}%). Past form: ${this.getPastForm(this.originalVerb)}`;
+                                this.aiPrediction = `AI predicts "${this.originalVerb}" as REGULAR (${confidence}% confidence). Past form: ${this.getPastForm(this.originalVerb)}`;
                             }
                         }
                     } catch (error) {
@@ -936,33 +1035,24 @@
                     }
                 },
                 
-                // Улучшенное преобразование текста в вектор
+                // Преобразование текста в вектор
                 textToVector(text) {
                     const vector = {};
                     const normalized = text.toLowerCase();
                     
-                    // 1. Кодируем каждую букву в отдельную фичу
-                    for (let i = 0; i < Math.min(normalized.length, 8); i++) {
-                        vector[`char${i}`] = (normalized.charCodeAt(i) || 32) / 122; // нормализуем к 0-1
+                    // Кодируем каждую букву в отдельную фичу
+                    for (let i = 0; i < Math.min(normalized.length, 6); i++) {
+                        vector[`char${i}`] = (normalized.charCodeAt(i) || 32) / 122;
                     }
                     
-                    // 2. Дополнительные лингвистические фичи
+                    // Дополнительные лингвистические фичи
                     vector.length = normalized.length / 10;
                     vector.endsWithE = normalized.endsWith('e') ? 1 : 0;
                     vector.endsWithY = normalized.endsWith('y') ? 1 : 0;
-                    vector.endsWithN = normalized.endsWith('n') ? 1 : 0;
-                    vector.startsWithS = normalized.startsWith('s') ? 1 : 0;
-                    vector.hasDoubleLetter = /([a-z])\1/.test(normalized) ? 1 : 0;
                     
-                    // 3. Паттерны для неправильных глаголов
-                    vector.hasI_A_U = /i.*a.*u/.test(normalized) ? 1 : 0; // для sing-sang-sung паттерна
-                    vector.hasEA = /ea/.test(normalized) ? 1 : 0;
-                    vector.hasOU = /ou/.test(normalized) ? 1 : 0;
-                    
-                    // 4. Статистические фичи
+                    // Статистические фичи
                     const vowels = normalized.match(/[aeiou]/g);
                     vector.vowelCount = vowels ? vowels.length / 10 : 0;
-                    vector.vowelRatio = normalized.length > 0 ? (vowels ? vowels.length / normalized.length : 0) : 0;
                     
                     return vector;
                 },
@@ -972,55 +1062,13 @@
                     if (!this.brainModel) {
                         this.initializeBrainModel();
                         if (!this.brainModel) {
-                            this.aiPrediction = "AI model not loaded yet. Click 'Train AI Model' to initialize.";
+                            this.aiPrediction = "AI model not loaded. Please check internet connection.";
                             this.aiConfidence = 0;
                             return;
                         }
                     }
                     
                     this.predictCurrentVerb();
-                },
-                
-                // Экспорт обученной модели
-                exportModel() {
-                    if (!this.trainedModelData) {
-                        alert('No trained model to export. Please train the model first.');
-                        return;
-                    }
-                    
-                    const modelJson = JSON.stringify(this.trainedModelData);
-                    const blob = new Blob([modelJson], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'verb-classifier-model.json';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                    this.aiPrediction = 'Model exported successfully!';
-                },
-                
-                // Импорт обученной модели
-                importModel(event) {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        try {
-                            const modelData = JSON.parse(e.target.result);
-                            this.brainModel = new brain.NeuralNetwork();
-                            this.brainModel.fromJSON(modelData);
-                            this.trainedModelData = modelData;
-                            this.aiPrediction = 'Model imported successfully! Ready for predictions.';
-                            this.predictCurrentVerb();
-                        } catch (error) {
-                            this.aiPrediction = 'Error importing model: ' + error.message;
-                        }
-                    };
-                    reader.readAsText(file);
                 },
                 
                 // Переключение темного режима
@@ -1032,9 +1080,6 @@
                     } else {
                         document.body.classList.remove('dark-mode');
                     }
-                    
-                    // Обновить график при смене темы
-                    setTimeout(() => this.updateChart(), 100);
                 }
             };
         }
