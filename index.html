@@ -752,101 +752,275 @@
                     if (typeof brain !== 'undefined') {
                         this.brainModel = new brain.NeuralNetwork({
                             activation: 'sigmoid',
-                            hiddenLayers: [6, 4],
+                            hiddenLayers: [12, 8],
                             learningRate: 0.3
                         });
-                        this.trainModel();
+                        console.log('AI Model initialized');
                     } else {
                         console.warn('Brain.js not loaded');
+                        this.aiPrediction = "Brain.js library not loaded. Check your internet connection.";
                     }
                 },
                 
-                // Обучение модели
+                // Обучение модели на основе данных irregularVerbs
                 trainModel() {
-                    if (!this.brainModel) return;
-                    
-                    // Тренировочные данные для AI
-                    const trainingData = [
-                        // Регулярные глаголы
-                        { input: this.textToVector('walk'), output: { regular: 1 } },
-                        { input: this.textToVector('talk'), output: { regular: 1 } },
-                        { input: this.textToVector('work'), output: { regular: 1 } },
-                        { input: this.textToVector('help'), output: { regular: 1 } },
-                        { input: this.textToVector('play'), output: { regular: 1 } },
-                        { input: this.textToVector('look'), output: { regular: 1 } },
-                        { input: this.textToVector('clean'), output: { regular: 1 } },
-                        { input: this.textToVector('open'), output: { regular: 1 } },
-                        
-                        // Неправильные глаголы
-                        { input: this.textToVector('go'), output: { irregular: 1 } },
-                        { input: this.textToVector('see'), output: { irregular: 1 } },
-                        { input: this.textToVector('take'), output: { irregular: 1 } },
-                        { input: this.textToVector('make'), output: { irregular: 1 } },
-                        { input: this.textToVector('come'), output: { irregular: 1 } },
-                        { input: this.textToVector('know'), output: { irregular: 1 } },
-                        { input: this.textToVector('get'), output: { irregular: 1 } },
-                        { input: this.textToVector('give'), output: { irregular: 1 } }
-                    ];
-                    
-                    // Обучение модели
-                    const result = this.brainModel.train(trainingData, {
-                        iterations: 2000,
-                        errorThresh: 0.005,
-                        log: false,
-                        logPeriod: 500
-                    });
-                    
-                    this.aiPrediction = "AI model trained successfully with " + Math.round((1 - result.error) * 100) + "% accuracy!";
-                    this.aiConfidence = Math.round((1 - result.error) * 100);
-                },
-                
-                // Преобразование текста в вектор для нейронной сети
-                textToVector(text) {
-                    const vector = {};
-                    const normalized = text.toLowerCase().padEnd(5, ' ');
-                    
-                    // Кодируем первые 5 символов
-                    for (let i = 0; i < 5; i++) {
-                        vector[`char${i}`] = normalized.charCodeAt(i) / 255;
-                    }
-                    
-                    // Дополнительные признаки
-                    vector.length = normalized.trim().length / 10;
-                    vector.endsWithE = normalized.endsWith('e') ? 1 : 0;
-                    vector.endsWithY = normalized.endsWith('y') ? 1 : 0;
-                    
-                    return vector;
-                },
-                
-                // Предсказание с помощью AI
-                predictWithAI() {
                     if (!this.brainModel) {
-                        this.aiPrediction = "AI model not loaded yet. Click 'Train AI Model' to initialize.";
-                        this.aiConfidence = 0;
-                        return;
+                        this.initializeBrainModel();
                     }
                     
                     try {
+                        // Создаем тренировочные данные на основе irregularVerbs
+                        const trainingData = [];
+                        
+                        // 1. Собираем все неправильные глаголы из нашей базы
+                        const irregularVerbs = Object.keys(this.irregularVerbs);
+                        
+                        // 2. Создаем список правильных глаголов для контраста
+                        const regularVerbs = [
+                            'walk', 'talk', 'work', 'help', 'play', 'look', 'clean', 'open',
+                            'start', 'ask', 'answer', 'listen', 'watch', 'rain', 'snow',
+                            'dance', 'jump', 'cry', 'smile', 'laugh', 'study', 'wait', 'stay',
+                            'move', 'change', 'arrive', 'live', 'die', 'happen', 'remember',
+                            'forget', 'stop', 'continue', 'try', 'need', 'want', 'like',
+                            'love', 'hate', 'prefer', 'hope', 'plan', 'decide', 'offer',
+                            'promise', 'expect', 'seem', 'appear', 'believe'
+                        ];
+                        
+                        // 3. Фильтруем правильные глаголы, чтобы убрать те, которые есть в irregularVerbs
+                        const filteredRegularVerbs = regularVerbs.filter(verb => 
+                            !irregularVerbs.includes(verb)
+                        );
+                        
+                        // 4. Создаем сбалансированный набор данных
+                        // Используем все неправильные глаголы и такое же количество случайных правильных
+                        const numSamples = Math.min(irregularVerbs.length, filteredRegularVerbs.length);
+                        const selectedRegularVerbs = this.shuffleArray(filteredRegularVerbs).slice(0, numSamples);
+                        
+                        console.log(`Training with ${irregularVerbs.length} irregular verbs and ${selectedRegularVerbs.length} regular verbs`);
+                        
+                        // 5. Добавляем неправильные глаголы
+                        irregularVerbs.forEach(verb => {
+                            trainingData.push({
+                                input: this.textToVector(verb),
+                                output: { irregular: 1 }
+                            });
+                        });
+                        
+                        // 6. Добавляем правильные глаголы
+                        selectedRegularVerbs.forEach(verb => {
+                            trainingData.push({
+                                input: this.textToVector(verb),
+                                output: { regular: 1 }
+                            });
+                        });
+                        
+                        // 7. Перемешиваем данные для лучшего обучения
+                        const shuffledData = this.shuffleArray(trainingData);
+                        
+                        // 8. Обучаем модель
+                        const startTime = Date.now();
+                        const result = this.brainModel.train(shuffledData, {
+                            iterations: 3000,
+                            errorThresh: 0.003,
+                            log: true,
+                            logPeriod: 300,
+                            learningRate: 0.3
+                        });
+                        const trainingTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                        
+                        // 9. Сохраняем обученную модель для последующего использования
+                        this.trainedModelData = this.brainModel.toJSON();
+                        
+                        // 10. Обновляем UI
+                        const accuracy = Math.round((1 - result.error) * 100);
+                        this.aiPrediction = `AI model trained successfully! ${irregularVerbs.length} irregular verbs learned. Accuracy: ${accuracy}% (${trainingTime}s)`;
+                        this.aiConfidence = accuracy;
+                        
+                        // 11. Тестируем модель на нескольких примерах
+                        this.testTrainedModel();
+                        
+                    } catch (error) {
+                        console.error('Training error:', error);
+                        this.aiPrediction = `Training failed: ${error.message}`;
+                        this.aiConfidence = 0;
+                    }
+                },
+                
+                // Вспомогательная функция для перемешивания массива
+                shuffleArray(array) {
+                    const shuffled = [...array];
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+                    return shuffled;
+                },
+                
+                // Тестирование обученной модели
+                testTrainedModel() {
+                    if (!this.brainModel) return;
+                    
+                    const testVerbs = [
+                        // Неправильные для проверки
+                        { verb: 'go', expected: 'irregular' },
+                        { verb: 'see', expected: 'irregular' },
+                        { verb: 'take', expected: 'irregular' },
+                        { verb: 'make', expected: 'irregular' },
+                        { verb: 'come', expected: 'irregular' },
+                        
+                        // Правильные для проверки
+                        { verb: 'walk', expected: 'regular' },
+                        { verb: 'talk', expected: 'regular' },
+                        { verb: 'play', expected: 'regular' },
+                        { verb: 'work', expected: 'regular' },
+                        { verb: 'clean', expected: 'regular' }
+                    ];
+                    
+                    let correct = 0;
+                    const testResults = [];
+                    
+                    testVerbs.forEach(test => {
+                        const prediction = this.brainModel.run(this.textToVector(test.verb));
+                        const isIrregular = prediction.irregular > prediction.regular;
+                        const predictedType = isIrregular ? 'irregular' : 'regular';
+                        const confidence = Math.round(Math.max(prediction.irregular, prediction.regular) * 100);
+                        
+                        const isCorrect = predictedType === test.expected;
+                        if (isCorrect) correct++;
+                        
+                        testResults.push({
+                            verb: test.verb,
+                            expected: test.expected,
+                            predicted: predictedType,
+                            confidence: confidence,
+                            correct: isCorrect
+                        });
+                    });
+                    
+                    const accuracy = Math.round((correct / testVerbs.length) * 100);
+                    console.log(`Test accuracy: ${accuracy}%`, testResults);
+                    
+                    // Обновляем предсказание для текущего глагола
+                    this.predictCurrentVerb();
+                },
+                
+                // Предсказание для текущего выбранного глагола
+                predictCurrentVerb() {
+                    if (!this.brainModel) return;
+                    
+                    try {
                         const prediction = this.brainModel.run(this.textToVector(this.originalVerb));
-                        const isRegular = prediction.regular > prediction.irregular;
-                        const confidence = isRegular ? prediction.regular : prediction.irregular;
+                        const isIrregular = prediction.irregular > prediction.regular;
+                        const confidence = Math.round(Math.max(prediction.irregular, prediction.regular) * 100);
                         
-                        this.aiConfidence = Math.round(confidence * 100);
+                        this.aiConfidence = confidence;
                         
-                        if (isRegular) {
-                            this.aiPrediction = `AI predicts "${this.originalVerb}" is a REGULAR verb. Past form: ${this.getPastForm(this.originalVerb)}`;
+                        if (isIrregular) {
+                            if (this.isIrregular(this.originalVerb)) {
+                                const irregular = this.irregularVerbs[this.originalVerb];
+                                this.aiPrediction = `AI correctly identifies "${this.originalVerb}" as IRREGULAR (confidence: ${confidence}%). Past: ${irregular.pastSimple}, Participle: ${irregular.pastParticiple}`;
+                            } else {
+                                this.aiPrediction = `AI predicts "${this.originalVerb}" might be IRREGULAR (confidence: ${confidence}%), but it's not in our database.`;
+                            }
                         } else {
                             if (this.isIrregular(this.originalVerb)) {
                                 const irregular = this.irregularVerbs[this.originalVerb];
-                                this.aiPrediction = `AI correctly identifies "${this.originalVerb}" as IRREGULAR. Past: ${irregular.pastSimple}, Participle: ${irregular.pastParticiple}`;
+                                this.aiPrediction = `AI incorrectly predicts "${this.originalVerb}" as REGULAR (confidence: ${confidence}%). Actually irregular: Past: ${irregular.pastSimple}`;
                             } else {
-                                this.aiPrediction = `AI predicts "${this.originalVerb}" is IRREGULAR (but not in our database).`;
+                                this.aiPrediction = `AI correctly predicts "${this.originalVerb}" as REGULAR (confidence: ${confidence}%). Past form: ${this.getPastForm(this.originalVerb)}`;
                             }
                         }
                     } catch (error) {
                         this.aiPrediction = "AI prediction error. Try training the model first.";
                         this.aiConfidence = 0;
                     }
+                },
+                
+                // Улучшенное преобразование текста в вектор
+                textToVector(text) {
+                    const vector = {};
+                    const normalized = text.toLowerCase();
+                    
+                    // 1. Кодируем каждую букву в отдельную фичу
+                    for (let i = 0; i < Math.min(normalized.length, 8); i++) {
+                        vector[`char${i}`] = (normalized.charCodeAt(i) || 32) / 122; // нормализуем к 0-1
+                    }
+                    
+                    // 2. Дополнительные лингвистические фичи
+                    vector.length = normalized.length / 10;
+                    vector.endsWithE = normalized.endsWith('e') ? 1 : 0;
+                    vector.endsWithY = normalized.endsWith('y') ? 1 : 0;
+                    vector.endsWithN = normalized.endsWith('n') ? 1 : 0;
+                    vector.startsWithS = normalized.startsWith('s') ? 1 : 0;
+                    vector.hasDoubleLetter = /([a-z])\1/.test(normalized) ? 1 : 0;
+                    
+                    // 3. Паттерны для неправильных глаголов
+                    vector.hasI_A_U = /i.*a.*u/.test(normalized) ? 1 : 0; // для sing-sang-sung паттерна
+                    vector.hasEA = /ea/.test(normalized) ? 1 : 0;
+                    vector.hasOU = /ou/.test(normalized) ? 1 : 0;
+                    
+                    // 4. Статистические фичи
+                    const vowels = normalized.match(/[aeiou]/g);
+                    vector.vowelCount = vowels ? vowels.length / 10 : 0;
+                    vector.vowelRatio = normalized.length > 0 ? (vowels ? vowels.length / normalized.length : 0) : 0;
+                    
+                    return vector;
+                },
+                
+                // Расширенное предсказание с AI
+                predictWithAI() {
+                    if (!this.brainModel) {
+                        this.initializeBrainModel();
+                        if (!this.brainModel) {
+                            this.aiPrediction = "AI model not loaded yet. Click 'Train AI Model' to initialize.";
+                            this.aiConfidence = 0;
+                            return;
+                        }
+                    }
+                    
+                    this.predictCurrentVerb();
+                },
+                
+                // Экспорт обученной модели
+                exportModel() {
+                    if (!this.trainedModelData) {
+                        alert('No trained model to export. Please train the model first.');
+                        return;
+                    }
+                    
+                    const modelJson = JSON.stringify(this.trainedModelData);
+                    const blob = new Blob([modelJson], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'verb-classifier-model.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.aiPrediction = 'Model exported successfully!';
+                },
+                
+                // Импорт обученной модели
+                importModel(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const modelData = JSON.parse(e.target.result);
+                            this.brainModel = new brain.NeuralNetwork();
+                            this.brainModel.fromJSON(modelData);
+                            this.trainedModelData = modelData;
+                            this.aiPrediction = 'Model imported successfully! Ready for predictions.';
+                            this.predictCurrentVerb();
+                        } catch (error) {
+                            this.aiPrediction = 'Error importing model: ' + error.message;
+                        }
+                    };
+                    reader.readAsText(file);
                 },
                 
                 // Переключение темного режима
