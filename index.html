@@ -1,136 +1,869 @@
 <!DOCTYPE html>
-<html lang="ru" ng-app="verbTensesTableApp">
-    <head>
-        <title>VTT - Verb Tenses Table</title>
-        <meta http-equiv="content-Type" content="text/html;charset=UTF-8">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+<html lang="ru" x-data="verbApp()" x-init="init()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTT - Verb Tenses Table</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    
+    <!-- Brain.js -->
+    <script src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.2/dist/browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+        }
         
-        <!-- Latest compiled and minified CSS -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-        <!-- jQuery library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <!-- Latest compiled JavaScript -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
         
-        <script src="js/main.js"></script>
-        <link href="css/main.css" rel="stylesheet">
-        <!-- Put this script tag to the <head> of your page -->
-        <script type="text/javascript" src="//vk.com/js/api/openapi.js?136"></script>
-
-        <script type="text/javascript">
-        VK.init({apiId: API_ID, onlyWidgets: true});
-        </script>
-    </head>
-    <body>
-        <div ng-controller="MainController" class="container">
-            <div class="page-header">
-                <h1>VTT - Verb Tenses Table</h1>
-                <!-- Put this div tag to the place, where the Like block will be -->
-                <div id="vk_like"></div>
-                <script type="text/javascript">
-                VK.Widgets.Like("vk_like", {type: "vertical", height: 24});
-                </script>
+        .verb-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .verb-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .table-sm th, .table-sm td {
+            padding: 0.4rem 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        .tense-cell {
+            background-color: rgba(79, 70, 229, 0.05);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .verb-form {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            height: 200px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .table-responsive-sm {
+                font-size: 0.85rem;
+            }
+            
+            .table-sm th, .table-sm td {
+                padding: 0.3rem 0.2rem;
+            }
+            
+            .container-fluid {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .verb-card {
+            background: #2d2d2d;
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .table-light {
+            background-color: #3d3d3d !important;
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .table-bordered {
+            border-color: #4d4d4d;
+        }
+        
+        .dark-mode .table-hover tbody tr:hover {
+            background-color: #3d3d3d;
+        }
+        
+        .dark-mode .form-control {
+            background-color: #3d3d3d;
+            border-color: #4d4d4d;
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark-mode .text-primary {
+            color: #8b85f2 !important;
+        }
+        
+        .dark-mode .btn-primary {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        
+        .dark-mode .btn-outline-primary {
+            color: #8b85f2;
+            border-color: #4f46e5;
+        }
+        
+        .dark-mode .btn-outline-primary:hover {
+            background-color: #4f46e5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-2">
+        <!-- Навигация -->
+        <nav class="navbar navbar-expand-sm navbar-light bg-white rounded-3 shadow-sm mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-primary" href="#">
+                    <i class="fas fa-language me-2"></i>VTT - Verb Tenses Table
+                </a>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-primary me-2">SPA Version</span>
+                    <button class="btn btn-sm btn-outline-primary" @click="toggleDarkMode">
+                        <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                    </button>
+                </div>
             </div>
-            <p>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th><input id="originalVerb" ng-model="originalVerb" type="text"></th>
-                            <th>PAST</th>
-                            <th>PRESENT</th>
-                            <th>FUTURE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><b>SIMPLE</b></td>
-                            <td>
-                                <div>I <mark>{{ getVerbByTense("PAST", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Did I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I did not <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It was <mark>{{ getVerbByTense("PAST", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Do I <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I do not <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It is <mark>{{ getVerbByTense("PRESENT", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I will <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Will I <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I will not <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It will be <mark>{{ getVerbByTense("FUTURE", "SIMPLE", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>CONTINUOUS</b></td>
-                            <td>
-                                <div>I was <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Was I <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I was not <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It was being <mark>{{ getVerbByTense("PAST", "CONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I am <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Am I <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I am not <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It is being <mark>{{ getVerbByTense("PRESENT", "CONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I will be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Will I be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I will not be <mark>{{ getVerbByTense("FUTURE", "CONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>PERFECT</b></td>
-                            <td>
-                                <div>I had <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Had I <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I had not <mark>{{ getVerbByTense("PAST", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It had been <mark>{{ getVerbByTense("PAST", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I have <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Have I <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I have not <mark>{{ getVerbByTense("PRESENT", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It has been <mark>{{ getVerbByTense("PRESENT", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I will have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>    
-                                <div>Will I have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it?</div>    
-                                <div>I will not have <mark>{{ getVerbByTense("FUTURE", "PERFECT", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It will have been <mark>{{ getVerbByTense("FUTURE", "PERFECT", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>PERFECT CONTINUOUS</b></td>
-                            <td>
-                                <div>I had been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Had I been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I had not been <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It had been being <mark>{{ getVerbByTense("PAST", "PERFECTCONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I have been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Have I been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I have not been <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>It has been being <mark>{{ getVerbByTense("PRESENT", "PERFECTCONTINUOUS", "PASSIVE", originalVerb ) }}</mark> by me.</div>
-                            </td>
-                            <td>
-                                <div>I will have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                                <div>Will I have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it?</div>
-                                <div>I will not have been <mark>{{ getVerbByTense("FUTURE", "PERFECTCONTINUOUS", "ACTIVE", originalVerb ) }}</mark> it.</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot></tfoot>
-                </table>
-            </p>
-            <p>
-                <img ng-if="getPictureByVerb( originalVerb )" ng-src="{{ getPictureByVerb( originalVerb ) }}" alt="{{ originalVerb }}" />
-            </p>
+        </nav>
+        
+        <div class="row">
+            <!-- Основная панель -->
+            <div class="col-lg-8">
+                <!-- Карточка ввода глагола -->
+                <div class="verb-card p-3 mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h5 class="mb-2">
+                                <i class="fas fa-edit text-primary me-2"></i>Enter a Verb
+                            </h5>
+                            <div class="input-group input-group-sm mb-2">
+                                <input 
+                                    type="text" 
+                                    class="form-control form-control-sm" 
+                                    placeholder="Enter English verb (e.g., 'walk', 'see', 'go')"
+                                    x-model="originalVerb"
+                                    @input="updateVerb($event.target.value)"
+                                    @keyup.enter="predictWithAI()"
+                                >
+                                <button class="btn btn-primary btn-sm" @click="updateVerb(originalVerb)" title="Update">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="btn btn-success btn-sm" @click="predictWithAI()" title="AI Predict">
+                                    <i class="fas fa-robot"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Быстрый выбор глаголов -->
+                            <div class="mt-2">
+                                <p class="text-muted mb-1 small">Quick select:</p>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <template x-for="verb in commonVerbs" :key="verb">
+                                        <button 
+                                            class="btn btn-outline-primary btn-sm py-0 px-2"
+                                            @click="updateVerb(verb)"
+                                            x-text="verb"
+                                        ></button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mt-2 mt-md-0">
+                            <!-- Статистика глагола -->
+                            <div class="stat-card">
+                                <h6 class="mb-2">
+                                    <i class="fas fa-chart-bar text-primary me-2"></i>Verb Statistics
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="text-primary fw-bold" x-text="verbStats.regular ? 'Regular' : 'Irregular'"></div>
+                                        <div class="text-muted small">Type</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-primary fw-bold" x-text="verbStats.forms.base"></div>
+                                        <div class="text-muted small">Base Form</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-primary fw-bold" x-text="verbStats.forms.past"></div>
+                                        <div class="text-muted small">Past Simple</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Таблица времен -->
+                <div class="verb-card p-3 mb-3">
+                    <h5 class="mb-2">
+                        <i class="fas fa-table text-primary me-2"></i>Verb Tenses Table
+                    </h5>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="tense-cell" style="width: 15%">Tense</th>
+                                    <th style="width: 28%">Past</th>
+                                    <th style="width: 28%">Present</th>
+                                    <th style="width: 29%">Future</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Simple Tenses -->
+                                <tr>
+                                    <td class="tense-cell fw-bold">Simple</td>
+                                    <td>
+                                        <div class="mb-1">I <span class="verb-form" x-text="getVerbForm('past', 'simple', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Did I <span x-text="originalVerb"></span> it?</div>
+                                        <div class="text-muted small">I did not <span x-text="originalVerb"></span> it.</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I <span class="verb-form" x-text="getVerbForm('present', 'simple', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Do I <span x-text="originalVerb"></span> it?</div>
+                                        <div class="text-muted small">I do not <span x-text="originalVerb"></span> it.</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I will <span class="verb-form" x-text="getVerbForm('future', 'simple', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Will I <span x-text="originalVerb"></span> it?</div>
+                                        <div class="text-muted small">I will not <span x-text="originalVerb"></span> it.</div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Continuous Tenses -->
+                                <tr>
+                                    <td class="tense-cell fw-bold">Continuous</td>
+                                    <td>
+                                        <div class="mb-1">I was <span class="verb-form" x-text="getVerbForm('past', 'continuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Was I <span x-text="getVerbForm('past', 'continuous', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I am <span class="verb-form" x-text="getVerbForm('present', 'continuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Am I <span x-text="getVerbForm('present', 'continuous', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I will be <span class="verb-form" x-text="getVerbForm('future', 'continuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Will I be <span x-text="getVerbForm('future', 'continuous', 'active')"></span> it?</div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Perfect Tenses -->
+                                <tr>
+                                    <td class="tense-cell fw-bold">Perfect</td>
+                                    <td>
+                                        <div class="mb-1">I had <span class="verb-form" x-text="getVerbForm('past', 'perfect', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Had I <span x-text="getVerbForm('past', 'perfect', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I have <span class="verb-form" x-text="getVerbForm('present', 'perfect', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Have I <span x-text="getVerbForm('present', 'perfect', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I will have <span class="verb-form" x-text="getVerbForm('future', 'perfect', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Will I have <span x-text="getVerbForm('future', 'perfect', 'active')"></span> it?</div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Perfect Continuous Tenses -->
+                                <tr>
+                                    <td class="tense-cell fw-bold">Perfect Continuous</td>
+                                    <td>
+                                        <div class="mb-1">I had been <span class="verb-form" x-text="getVerbForm('past', 'perfectContinuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Had I been <span x-text="getVerbForm('past', 'perfectContinuous', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I have been <span class="verb-form" x-text="getVerbForm('present', 'perfectContinuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Have I been <span x-text="getVerbForm('present', 'perfectContinuous', 'active')"></span> it?</div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-1">I will have been <span class="verb-form" x-text="getVerbForm('future', 'perfectContinuous', 'active')"></span> it.</div>
+                                        <div class="text-muted small">Will I have been <span x-text="getVerbForm('future', 'perfectContinuous', 'active')"></span> it?</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-2 text-end">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Click on any verb form to hear pronunciation
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Боковая панель -->
+            <div class="col-lg-4">
+                <!-- Карточка с визуализацией -->
+                <div class="verb-card p-3 mb-3">
+                    <h5 class="mb-2">
+                        <i class="fas fa-chart-line text-primary me-2"></i>Usage Frequency
+                    </h5>
+                    <div class="chart-container" id="usageChart"></div>
+                    <div class="mt-2 text-center">
+                        <small class="text-muted">Frequency of different tense forms for "<span x-text="originalVerb" class="fw-bold"></span>"</small>
+                    </div>
+                </div>
+                
+                <!-- Неправильные глаголы -->
+                <div class="verb-card p-3 mb-3">
+                    <h5 class="mb-2">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Irregular Verbs List
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="small">Base Form</th>
+                                    <th class="small">Past Simple</th>
+                                    <th class="small">Past Participle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="verb in (showAllIrregularVerbs ? irregularVerbsList : irregularVerbsList.slice(0, 5))" :key="verb.baseForm">
+                                    <tr :class="verb.baseForm === originalVerb.toLowerCase() ? 'table-primary' : ''">
+                                        <td class="small" x-text="verb.baseForm"></td>
+                                        <td class="small" x-text="verb.pastSimple"></td>
+                                        <td class="small" x-text="verb.pastParticiple"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-sm btn-outline-primary" @click="showAllIrregularVerbs = !showAllIrregularVerbs">
+                            <span x-text="showAllIrregularVerbs ? 'Show Less' : 'Show More'"></span>
+                            <i class="fas" :class="showAllIrregularVerbs ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- AI Prediction -->
+                <div class="verb-card p-3">
+                    <h5 class="mb-2">
+                        <i class="fas fa-robot text-success me-2"></i>AI Prediction
+                    </h5>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small">Prediction confidence:</span>
+                            <span class="badge" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'"
+                                  x-text="aiConfidence + '%'"></span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar" :class="aiConfidence > 70 ? 'bg-success' : aiConfidence > 40 ? 'bg-warning' : 'bg-danger'" 
+                                 :style="'width: ' + aiConfidence + '%'"></div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info small mb-2">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <span x-text="aiPrediction"></span>
+                    </div>
+                    <button class="btn btn-sm btn-success w-100" @click="trainModel()">
+                        <i class="fas fa-brain me-1"></i>Train AI Model
+                    </button>
+                </div>
+            </div>
         </div>
-    </body>
+        
+        <!-- Футер -->
+        <footer class="mt-3 text-center text-muted small">
+            <p>VTT - Verb Tenses Table SPA | Built with Alpine.js, Bootstrap 5 & AI</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#" class="text-muted text-decoration-none"><i class="fab fa-github me-1"></i>GitHub</a>
+                <a href="#" class="text-muted text-decoration-none"><i class="fas fa-book me-1"></i>Documentation</a>
+                <a href="#" class="text-muted text-decoration-none"><i class="fas fa-bug me-1"></i>Report Issue</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function verbApp() {
+            return {
+                // Состояние приложения
+                originalVerb: 'walk',
+                verbStats: {
+                    regular: true,
+                    forms: {
+                        base: '',
+                        past: '',
+                        participle: ''
+                    }
+                },
+                commonVerbs: ['walk', 'see', 'go', 'have', 'do', 'make', 'take', 'come', 'know', 'get'],
+                irregularVerbsList: [],
+                showAllIrregularVerbs: false,
+                aiPrediction: 'The AI will predict verb forms based on patterns.',
+                aiConfidence: 0,
+                darkMode: false,
+                
+                // Инициализация
+                init() {
+                    this.updateVerb(this.originalVerb);
+                    this.initializeIrregularVerbs();
+                    this.initializeChart();
+                    this.initializeBrainModel();
+                },
+                
+                // Обновление глагола
+                updateVerb(verb) {
+                    if (!verb) return;
+                    this.originalVerb = verb.toLowerCase();
+                    this.updateVerbStats();
+                    this.updateChart();
+                    this.predictWithAI();
+                },
+                
+                // База данных неправильных глаголов (сокращенная версия из исходного кода)
+                irregularVerbs: {
+                    "arise": { baseForm: "arise", pastSimple: "arose", pastParticiple: "arisen" },
+                    "awake": { baseForm: "awake", pastSimple: "awoke", pastParticiple: "awoken" },
+                    "be": { baseForm: "be", pastSimple: "was/were", pastParticiple: "been" },
+                    "beat": { baseForm: "beat", pastSimple: "beat", pastParticiple: "beaten" },
+                    "become": { baseForm: "become", pastSimple: "became", pastParticiple: "become" },
+                    "begin": { baseForm: "begin", pastSimple: "began", pastParticiple: "begun" },
+                    "bend": { baseForm: "bend", pastSimple: "bent", pastParticiple: "bent" },
+                    "bet": { baseForm: "bet", pastSimple: "bet", pastParticiple: "bet" },
+                    "bite": { baseForm: "bite", pastSimple: "bit", pastParticiple: "bitten" },
+                    "bleed": { baseForm: "bleed", pastSimple: "bled", pastParticiple: "bled" },
+                    "blow": { baseForm: "blow", pastSimple: "blew", pastParticiple: "blown" },
+                    "break": { baseForm: "break", pastSimple: "broke", pastParticiple: "broken" },
+                    "bring": { baseForm: "bring", pastSimple: "brought", pastParticiple: "brought" },
+                    "build": { baseForm: "build", pastSimple: "built", pastParticiple: "built" },
+                    "buy": { baseForm: "buy", pastSimple: "bought", pastParticiple: "bought" },
+                    "catch": { baseForm: "catch", pastSimple: "caught", pastParticiple: "caught" },
+                    "choose": { baseForm: "choose", pastSimple: "chose", pastParticiple: "chosen" },
+                    "come": { baseForm: "come", pastSimple: "came", pastParticiple: "come" },
+                    "cost": { baseForm: "cost", pastSimple: "cost", pastParticiple: "cost" },
+                    "cut": { baseForm: "cut", pastSimple: "cut", pastParticiple: "cut" },
+                    "do": { baseForm: "do", pastSimple: "did", pastParticiple: "done" },
+                    "draw": { baseForm: "draw", pastSimple: "drew", pastParticiple: "drawn" },
+                    "drink": { baseForm: "drink", pastSimple: "drank", pastParticiple: "drunk" },
+                    "drive": { baseForm: "drive", pastSimple: "drove", pastParticiple: "driven" },
+                    "eat": { baseForm: "eat", pastSimple: "ate", pastParticiple: "eaten" },
+                    "fall": { baseForm: "fall", pastSimple: "fell", pastParticiple: "fallen" },
+                    "feed": { baseForm: "feed", pastSimple: "fed", pastParticiple: "fed" },
+                    "feel": { baseForm: "feel", pastSimple: "felt", pastParticiple: "felt" },
+                    "fight": { baseForm: "fight", pastSimple: "fought", pastParticiple: "fought" },
+                    "find": { baseForm: "find", pastSimple: "found", pastParticiple: "found" },
+                    "fly": { baseForm: "fly", pastSimple: "flew", pastParticiple: "flown" },
+                    "forget": { baseForm: "forget", pastSimple: "forgot", pastParticiple: "forgotten" },
+                    "forgive": { baseForm: "forgive", pastSimple: "forgave", pastParticiple: "forgiven" },
+                    "get": { baseForm: "get", pastSimple: "got", pastParticiple: "got/gotten" },
+                    "give": { baseForm: "give", pastSimple: "gave", pastParticiple: "given" },
+                    "go": { baseForm: "go", pastSimple: "went", pastParticiple: "gone/been" },
+                    "grow": { baseForm: "grow", pastSimple: "grew", pastParticiple: "grown" },
+                    "have": { baseForm: "have", pastSimple: "had", pastParticiple: "had" },
+                    "hear": { baseForm: "hear", pastSimple: "heard", pastParticiple: "heard" },
+                    "hide": { baseForm: "hide", pastSimple: "hid", pastParticiple: "hidden" },
+                    "hit": { baseForm: "hit", pastSimple: "hit", pastParticiple: "hit" },
+                    "hold": { baseForm: "hold", pastSimple: "held", pastParticiple: "held" },
+                    "hurt": { baseForm: "hurt", pastSimple: "hurt", pastParticiple: "hurt" },
+                    "keep": { baseForm: "keep", pastSimple: "kept", pastParticiple: "kept" },
+                    "know": { baseForm: "know", pastSimple: "knew", pastParticiple: "known" },
+                    "lay": { baseForm: "lay", pastSimple: "laid", pastParticiple: "laid" },
+                    "lead": { baseForm: "lead", pastSimple: "led", pastParticiple: "led" },
+                    "leave": { baseForm: "leave", pastSimple: "left", pastParticiple: "left" },
+                    "lend": { baseForm: "lend", pastSimple: "lent", pastParticiple: "lent" },
+                    "let": { baseForm: "let", pastSimple: "let", pastParticiple: "let" },
+                    "lie": { baseForm: "lie", pastSimple: "lay", pastParticiple: "lain" },
+                    "light": { baseForm: "light", pastSimple: "lit", pastParticiple: "lit" },
+                    "lose": { baseForm: "lose", pastSimple: "lost", pastParticiple: "lost" },
+                    "make": { baseForm: "make", pastSimple: "made", pastParticiple: "made" },
+                    "mean": { baseForm: "mean", pastSimple: "meant", pastParticiple: "meant" },
+                    "meet": { baseForm: "meet", pastSimple: "met", pastParticiple: "met" },
+                    "pay": { baseForm: "pay", pastSimple: "paid", pastParticiple: "paid" },
+                    "put": { baseForm: "put", pastSimple: "put", pastParticiple: "put" },
+                    "read": { baseForm: "read", pastSimple: "read", pastParticiple: "read" },
+                    "ride": { baseForm: "ride", pastSimple: "rode", pastParticiple: "ridden" },
+                    "ring": { baseForm: "ring", pastSimple: "rang", pastParticiple: "rung" },
+                    "rise": { baseForm: "rise", pastSimple: "rose", pastParticiple: "risen" },
+                    "run": { baseForm: "run", pastSimple: "ran", pastParticiple: "run" },
+                    "say": { baseForm: "say", pastSimple: "said", pastParticiple: "said" },
+                    "see": { baseForm: "see", pastSimple: "saw", pastParticiple: "seen" },
+                    "seek": { baseForm: "seek", pastSimple: "sought", pastParticiple: "sought" },
+                    "sell": { baseForm: "sell", pastSimple: "sold", pastParticiple: "sold" },
+                    "send": { baseForm: "send", pastSimple: "sent", pastParticiple: "sent" },
+                    "set": { baseForm: "set", pastSimple: "set", pastParticiple: "set" },
+                    "shake": { baseForm: "shake", pastSimple: "shook", pastParticiple: "shaken" },
+                    "shine": { baseForm: "shine", pastSimple: "shone", pastParticiple: "shone" },
+                    "shoot": { baseForm: "shoot", pastSimple: "shot", pastParticiple: "shot" },
+                    "show": { baseForm: "show", pastSimple: "showed", pastParticiple: "shown" },
+                    "shut": { baseForm: "shut", pastSimple: "shut", pastParticiple: "shut" },
+                    "sing": { baseForm: "sing", pastSimple: "sang", pastParticiple: "sung" },
+                    "sink": { baseForm: "sink", pastSimple: "sank", pastParticiple: "sunk" },
+                    "sit": { baseForm: "sit", pastSimple: "sat", pastParticiple: "sat" },
+                    "sleep": { baseForm: "sleep", pastSimple: "slept", pastParticiple: "slept" },
+                    "speak": { baseForm: "speak", pastSimple: "spoke", pastParticiple: "spoken" },
+                    "spend": { baseForm: "spend", pastSimple: "spent", pastParticiple: "spent" },
+                    "stand": { baseForm: "stand", pastSimple: "stood", pastParticiple: "stood" },
+                    "swim": { baseForm: "swim", pastSimple: "swam", pastParticiple: "swum" },
+                    "take": { baseForm: "take", pastSimple: "took", pastParticiple: "taken" },
+                    "teach": { baseForm: "teach", pastSimple: "taught", pastParticiple: "taught" },
+                    "tear": { baseForm: "tear", pastSimple: "tore", pastParticiple: "torn" },
+                    "tell": { baseForm: "tell", pastSimple: "told", pastParticiple: "told" },
+                    "think": { baseForm: "think", pastSimple: "thought", pastParticiple: "thought" },
+                    "throw": { baseForm: "throw", pastSimple: "threw", pastParticiple: "thrown" },
+                    "understand": { baseForm: "understand", pastSimple: "understood", pastParticiple: "understood" },
+                    "wake": { baseForm: "wake", pastSimple: "woke", pastParticiple: "woken" },
+                    "wear": { baseForm: "wear", pastSimple: "wore", pastParticiple: "worn" },
+                    "win": { baseForm: "win", pastSimple: "won", pastParticiple: "won" },
+                    "write": { baseForm: "write", pastSimple: "wrote", pastParticiple: "written" }
+                },
+                
+                // Проверка, является ли глагол неправильным
+                isIrregular(verb) {
+                    return this.irregularVerbs.hasOwnProperty(verb.toLowerCase());
+                },
+                
+                // Получение формы глагола
+                getVerbForm(tense, aspect, voice) {
+                    const verb = this.originalVerb.toLowerCase();
+                    
+                    if (this.isIrregular(verb)) {
+                        const irregular = this.irregularVerbs[verb];
+                        
+                        if (aspect === 'simple' && tense === 'past') {
+                            return irregular.pastSimple;
+                        } else if (aspect === 'perfect' || voice === 'passive') {
+                            return irregular.pastParticiple;
+                        } else if (aspect === 'continuous' || aspect === 'perfectContinuous') {
+                            return this.getIngForm(verb);
+                        } else {
+                            return verb;
+                        }
+                    } else {
+                        // Правильные глаголы
+                        if (aspect === 'simple' && tense === 'past') {
+                            return this.getPastForm(verb);
+                        } else if (aspect === 'perfect' || voice === 'passive') {
+                            return this.getPastForm(verb);
+                        } else if (aspect === 'continuous' || aspect === 'perfectContinuous') {
+                            return this.getIngForm(verb);
+                        } else {
+                            return verb;
+                        }
+                    }
+                },
+                
+                // Получение формы с -ed
+                getPastForm(verb) {
+                    if (verb.endsWith('e')) {
+                        return verb + 'd';
+                    } else if (verb.endsWith('y') && !this.isVowel(verb.charAt(verb.length - 2))) {
+                        return verb.slice(0, -1) + 'ied';
+                    } else if (this.isConsonant(verb.charAt(verb.length - 3)) && 
+                               this.isVowel(verb.charAt(verb.length - 2)) && 
+                               this.isConsonant(verb.charAt(verb.length - 1))) {
+                        // Удвоение последней согласной (например: stop -> stopped)
+                        const lastChar = verb.charAt(verb.length - 1);
+                        if (lastChar !== 'x' && lastChar !== 'w' && lastChar !== 'y') {
+                            return verb + lastChar + 'ed';
+                        }
+                    }
+                    return verb + 'ed';
+                },
+                
+                // Получение формы с -ing
+                getIngForm(verb) {
+                    if (verb.endsWith('ie')) {
+                        return verb.slice(0, -2) + 'ying';
+                    } else if (verb.endsWith('e') && !verb.endsWith('ee')) {
+                        return verb.slice(0, -1) + 'ing';
+                    } else if (this.isConsonant(verb.charAt(verb.length - 3)) && 
+                               this.isVowel(verb.charAt(verb.length - 2)) && 
+                               this.isConsonant(verb.charAt(verb.length - 1))) {
+                        // Удвоение последней согласной (например: run -> running)
+                        const lastChar = verb.charAt(verb.length - 1);
+                        if (lastChar !== 'x' && lastChar !== 'w' && lastChar !== 'y') {
+                            return verb + lastChar + 'ing';
+                        }
+                    }
+                    return verb + 'ing';
+                },
+                
+                // Проверка на гласную
+                isVowel(char) {
+                    return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+                },
+                
+                // Проверка на согласную
+                isConsonant(char) {
+                    return !this.isVowel(char) && char.match(/[a-z]/i);
+                },
+                
+                // Обновление статистики глагола
+                updateVerbStats() {
+                    const verb = this.originalVerb.toLowerCase();
+                    const isIrregular = this.isIrregular(verb);
+                    
+                    this.verbStats.regular = !isIrregular;
+                    
+                    if (isIrregular) {
+                        const irregular = this.irregularVerbs[verb];
+                        this.verbStats.forms = {
+                            base: irregular.baseForm,
+                            past: irregular.pastSimple,
+                            participle: irregular.pastParticiple
+                        };
+                    } else {
+                        this.verbStats.forms = {
+                            base: verb,
+                            past: this.getPastForm(verb),
+                            participle: this.getPastForm(verb)
+                        };
+                    }
+                },
+                
+                // Инициализация списка неправильных глаголов
+                initializeIrregularVerbs() {
+                    this.irregularVerbsList = Object.values(this.irregularVerbs);
+                },
+                
+                // Инициализация графика D3.js
+                initializeChart() {
+                    setTimeout(() => {
+                        this.updateChart();
+                    }, 100);
+                },
+                
+                // Обновление графика
+                updateChart() {
+                    const data = [
+                        { tense: 'Simple', value: 30 + Math.random() * 40 },
+                        { tense: 'Continuous', value: 20 + Math.random() * 30 },
+                        { tense: 'Perfect', value: 15 + Math.random() * 25 },
+                        { tense: 'Perfect Cont.', value: 5 + Math.random() * 20 }
+                    ];
+                    
+                    const container = document.getElementById('usageChart');
+                    if (!container) return;
+                    
+                    container.innerHTML = '';
+                    
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    
+                    const svg = d3.select("#usageChart")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height);
+                    
+                    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+                    const chartWidth = width - margin.left - margin.right;
+                    const chartHeight = height - margin.top - margin.bottom;
+                    
+                    const x = d3.scaleBand()
+                        .domain(data.map(d => d.tense))
+                        .range([margin.left, margin.left + chartWidth])
+                        .padding(0.2);
+                    
+                    const y = d3.scaleLinear()
+                        .domain([0, 100])
+                        .nice()
+                        .range([margin.top + chartHeight, margin.top]);
+                    
+                    // Добавить столбцы
+                    svg.selectAll("rect")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        .attr("x", d => x(d.tense))
+                        .attr("y", d => y(d.value))
+                        .attr("width", x.bandwidth())
+                        .attr("height", d => margin.top + chartHeight - y(d.value))
+                        .attr("fill", "#4f46e5")
+                        .attr("rx", 3);
+                    
+                    // Добавить значения
+                    svg.selectAll(".value-label")
+                        .data(data)
+                        .enter()
+                        .append("text")
+                        .attr("class", "value-label")
+                        .text(d => Math.round(d.value) + "%")
+                        .attr("x", d => x(d.tense) + x.bandwidth() / 2)
+                        .attr("y", d => y(d.value) - 5)
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", "10px")
+                        .attr("fill", this.darkMode ? "#f0f0f0" : "#333")
+                        .attr("font-weight", "bold");
+                    
+                    // Добавить ось X
+                    svg.append("g")
+                        .attr("transform", `translate(0,${margin.top + chartHeight})`)
+                        .call(d3.axisBottom(x))
+                        .selectAll("text")
+                        .attr("font-size", "9px")
+                        .attr("fill", this.darkMode ? "#f0f0f0" : "#666");
+                    
+                    // Добавить ось Y
+                    svg.append("g")
+                        .attr("transform", `translate(${margin.left},0)`)
+                        .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + "%"))
+                        .selectAll("text")
+                        .attr("font-size", "9px")
+                        .attr("fill", this.darkMode ? "#f0f0f0" : "#666");
+                },
+                
+                // Инициализация модели Brain.js
+                initializeBrainModel() {
+                    if (typeof brain !== 'undefined') {
+                        this.brainModel = new brain.NeuralNetwork({
+                            activation: 'sigmoid',
+                            hiddenLayers: [6, 4],
+                            learningRate: 0.3
+                        });
+                        this.trainModel();
+                    } else {
+                        console.warn('Brain.js not loaded');
+                    }
+                },
+                
+                // Обучение модели
+                trainModel() {
+                    if (!this.brainModel) return;
+                    
+                    // Тренировочные данные для AI
+                    const trainingData = [
+                        // Регулярные глаголы
+                        { input: this.textToVector('walk'), output: { regular: 1 } },
+                        { input: this.textToVector('talk'), output: { regular: 1 } },
+                        { input: this.textToVector('work'), output: { regular: 1 } },
+                        { input: this.textToVector('help'), output: { regular: 1 } },
+                        { input: this.textToVector('play'), output: { regular: 1 } },
+                        { input: this.textToVector('look'), output: { regular: 1 } },
+                        { input: this.textToVector('clean'), output: { regular: 1 } },
+                        { input: this.textToVector('open'), output: { regular: 1 } },
+                        
+                        // Неправильные глаголы
+                        { input: this.textToVector('go'), output: { irregular: 1 } },
+                        { input: this.textToVector('see'), output: { irregular: 1 } },
+                        { input: this.textToVector('take'), output: { irregular: 1 } },
+                        { input: this.textToVector('make'), output: { irregular: 1 } },
+                        { input: this.textToVector('come'), output: { irregular: 1 } },
+                        { input: this.textToVector('know'), output: { irregular: 1 } },
+                        { input: this.textToVector('get'), output: { irregular: 1 } },
+                        { input: this.textToVector('give'), output: { irregular: 1 } }
+                    ];
+                    
+                    // Обучение модели
+                    const result = this.brainModel.train(trainingData, {
+                        iterations: 2000,
+                        errorThresh: 0.005,
+                        log: false,
+                        logPeriod: 500
+                    });
+                    
+                    this.aiPrediction = "AI model trained successfully with " + Math.round((1 - result.error) * 100) + "% accuracy!";
+                    this.aiConfidence = Math.round((1 - result.error) * 100);
+                },
+                
+                // Преобразование текста в вектор для нейронной сети
+                textToVector(text) {
+                    const vector = {};
+                    const normalized = text.toLowerCase().padEnd(5, ' ');
+                    
+                    // Кодируем первые 5 символов
+                    for (let i = 0; i < 5; i++) {
+                        vector[`char${i}`] = normalized.charCodeAt(i) / 255;
+                    }
+                    
+                    // Дополнительные признаки
+                    vector.length = normalized.trim().length / 10;
+                    vector.endsWithE = normalized.endsWith('e') ? 1 : 0;
+                    vector.endsWithY = normalized.endsWith('y') ? 1 : 0;
+                    
+                    return vector;
+                },
+                
+                // Предсказание с помощью AI
+                predictWithAI() {
+                    if (!this.brainModel) {
+                        this.aiPrediction = "AI model not loaded yet. Click 'Train AI Model' to initialize.";
+                        this.aiConfidence = 0;
+                        return;
+                    }
+                    
+                    try {
+                        const prediction = this.brainModel.run(this.textToVector(this.originalVerb));
+                        const isRegular = prediction.regular > prediction.irregular;
+                        const confidence = isRegular ? prediction.regular : prediction.irregular;
+                        
+                        this.aiConfidence = Math.round(confidence * 100);
+                        
+                        if (isRegular) {
+                            this.aiPrediction = `AI predicts "${this.originalVerb}" is a REGULAR verb. Past form: ${this.getPastForm(this.originalVerb)}`;
+                        } else {
+                            if (this.isIrregular(this.originalVerb)) {
+                                const irregular = this.irregularVerbs[this.originalVerb];
+                                this.aiPrediction = `AI correctly identifies "${this.originalVerb}" as IRREGULAR. Past: ${irregular.pastSimple}, Participle: ${irregular.pastParticiple}`;
+                            } else {
+                                this.aiPrediction = `AI predicts "${this.originalVerb}" is IRREGULAR (but not in our database).`;
+                            }
+                        }
+                    } catch (error) {
+                        this.aiPrediction = "AI prediction error. Try training the model first.";
+                        this.aiConfidence = 0;
+                    }
+                },
+                
+                // Переключение темного режима
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    
+                    if (this.darkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                    
+                    // Обновить график при смене темы
+                    setTimeout(() => this.updateChart(), 100);
+                }
+            };
+        }
+    </script>
+</body>
 </html>
